@@ -30,17 +30,6 @@ export default function Demo() {
             <h2>Date Calendar</h2>
             <DateCalendar value={date()} onChange={setDate} />
             <h2>Date Range Calendar</h2>
-            <DateRangeCalendar value={range()} calendars={2} onChange={setRange} />
-            <br />
-            <Button
-                variant="outlined"
-                disabled={range().every((v) => !v)}
-                onClick={() => setRange([null, null])}
-            >
-                Clear
-            </Button>
-            <br />
-            <br />
             <DateField
                 label="Date Start"
                 value={range()[0]}
@@ -51,6 +40,17 @@ export default function Demo() {
                 value={range()[1]}
                 onChange={(d) => setRange([range()[0], d])}
             />
+            <br />
+            <br />
+            <DateRangeCalendar value={range()} calendars={2} onChange={setRange} />
+            <br />
+            <Button
+                variant="outlined"
+                disabled={range().every((v) => !v)}
+                onClick={() => setRange([null, null])}
+            >
+                Clear
+            </Button>
             <br />
             <br />
         </Box>

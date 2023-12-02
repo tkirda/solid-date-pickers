@@ -4,7 +4,11 @@ import ChevronLeftIcon from "@suid/icons-material/ChevronLeft";
 import ChevronRightIcon from "@suid/icons-material/ChevronRight";
 import useDayPicker from "./useDayPicker";
 import { CommonCalendarProps, MonthData } from "./models";
-import MonthCalendar, { calendarWidth, extractCommonCalendarProps } from "./MonthCalendar";
+import MonthCalendar, {
+    calendarHeight,
+    calendarWidth,
+    extractCommonCalendarProps,
+} from "./MonthCalendar";
 import { addMonths, addYears, isSameMonth, getToday, setYear, setMonth } from "./dateUtils";
 import { monthAndYear, monthNameShort } from "./dateFormat";
 
@@ -89,7 +93,7 @@ export default function DateCalendar(props: DayPickerProps) {
     const { weeks } = useDayPicker(calendarDate, selectedDate);
 
     return (
-        <Paper sx={{ width: calendarWidth + 32, minHeight: 290, p: 2 }}>
+        <Paper sx={{ width: calendarWidth + 32, p: 2 }}>
             <Show when={selectMode() === "day"}>
                 <Grid container justifyContent="space-between">
                     <Grid item>
@@ -130,7 +134,7 @@ export default function DateCalendar(props: DayPickerProps) {
                         </IconButton>
                     </Grid>
                 </Grid>
-                <Grid container>
+                <Grid container minHeight={calendarHeight}>
                     <For each={months()}>
                         {(month) => (
                             <Grid item xs={3}>
@@ -168,14 +172,14 @@ export default function DateCalendar(props: DayPickerProps) {
                         </IconButton>
                     </Grid>
                 </Grid>
-                <Grid container>
+                <Grid container minHeight={calendarHeight}>
                     <For each={years()}>
                         {(year) => (
                             <Grid item xs={3}>
                                 <IconButton
                                     sx={{
-                                        height: 50,
-                                        width: 50,
+                                        height: 40,
+                                        width: 40,
                                         fontSize: 12,
                                         borderColor: "primary.main",
                                         borderStyle: "solid",

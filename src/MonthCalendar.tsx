@@ -16,6 +16,8 @@ const getBorderWidth = (day: DayData) => {
 
 export const calendarWidth = 240;
 
+export const calendarHeight = 210;
+
 export const extractCommonCalendarProps = <T extends CommonCalendarProps>(props: T) => {
     const [commonProps] = splitProps(props, [
         "disableFuture",
@@ -95,7 +97,7 @@ export default function MonthCalendar(props: MonthCalendarProps) {
     };
 
     return (
-        <div>
+        <Box minHeight={calendarHeight}>
             <Stack direction="row" marginBottom={1} marginTop={1}>
                 <For each={weekDayLabels}>
                     {(label) => (
@@ -136,6 +138,6 @@ export default function MonthCalendar(props: MonthCalendarProps) {
                     </Stack>
                 )}
             </For>
-        </div>
+        </Box>
     );
 }
