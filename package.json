@@ -1,0 +1,68 @@
+{
+  "name": "suid-date-picker",
+  "version": "0.1.0",
+  "description": "Date picking components library build on top of @suid/material",
+  "keywords": [
+    "solid",
+    "date",
+    "picker"
+  ],
+  "license": "MIT",
+  "main": "dist/cjs/my-lib.js",
+  "module": "dist/esm/my-lib.js",
+  "types": "dist/types/my-lib.d.ts",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "solid": "./dist/source/my-lib.jsx",
+      "import": "./dist/esm/my-lib.js",
+      "browser": "./dist/esm/my-lib.js",
+      "require": "./dist/cjs/my-lib.js",
+      "node": "./dist/cjs/my-lib.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "rollup -c",
+    "build:demo": "tsc && vite build",
+    "typecheck": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "peerDependencies": {
+    "@suid/icons-material": "^0.6.11",
+    "@suid/material": "^0.15.1",
+    "solid-js": ">=1.6.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "^7.5.3",
+    "@storybook/addon-interactions": "^7.5.3",
+    "@storybook/addon-links": "^7.5.3",
+    "@storybook/blocks": "^7.5.3",
+    "@storybook/testing-library": "^0.2.2",
+    "@suid/icons-material": "^0.6.11",
+    "@suid/material": "^0.15.1",
+    "prettier": "^3.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "rollup": "^4.6.0",
+    "rollup-preset-solid": "^2.0.1",
+    "solid-js": "^1.8.6",
+    "storybook": "^7.5.3",
+    "storybook-solidjs": "^1.0.0-beta.2",
+    "storybook-solidjs-vite": "^1.0.0-beta.2",
+    "typescript": "^5.3.2",
+    "vite": "^4.5.0",
+    "vite-plugin-solid": "^2.7.2"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 4,
+    "endOfLine": "lf"
+  },
+  "dependencies": {}
+}
