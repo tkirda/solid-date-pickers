@@ -1,46 +1,4 @@
 /**
- * Checks if the given value is a valid Date object.
- * @param date - The value to check.
- * @returns True if the value is a valid Date object, false otherwise.
- */
-export const isDate = (date: any): date is Date => {
-    return date instanceof Date && !isNaN(date.getTime());
-};
-
-/**
- * Checks if two dates are the same day.
- * @param date1 - The first date.
- * @param date2 - The second date.
- * @returns True if the dates are the same day, false otherwise.
- */
-export const isSameDay = (date1: Date, date2: Date) => {
-    return (
-        date1.getDate() === date2.getDate() &&
-        date1.getMonth() === date2.getMonth() &&
-        date1.getFullYear() === date2.getFullYear()
-    );
-};
-
-/**
- * Checks if a date is today.
- * @param date - The date to check.
- * @returns True if the date is today, false otherwise.
- */
-export const isToday = (date: Date) => {
-    return isSameDay(date, new Date());
-};
-
-/**
- * Checks if two dates are in the same month.
- * @param date1 - The first date.
- * @param date2 - The second date.
- * @returns True if the dates are in the same month, false otherwise.
- */
-export const isSameMonth = (date1: Date, date2: Date) => {
-    return date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
-};
-
-/**
  * Adds the specified number of months to a date.
  * @param date - The date to add months to.
  * @param n - The number of months to add.
@@ -65,15 +23,6 @@ export const addYears = (date: Date, n: number) => {
 };
 
 /**
- * Gets today's date without the time component.
- * @returns Today's date.
- */
-export const getToday = () => {
-    const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-};
-
-/**
  * Gets the number of days in a month.
  * @param date - The date representing the month.
  * @returns The number of days in the month.
@@ -92,20 +41,72 @@ export const getMonthFirstDay = (date: Date) => {
 };
 
 /**
- * Sets the year of a given date.
- * @param date - The date to modify.
- * @param year - The year to set.
- * @returns A new Date object with the modified year.
+ * Gets today's date without the time component.
+ * @returns Today's date.
  */
-export const setYear = (date: Date, year: number) => {
+export const getToday = () => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+};
+
+/**
+ * Checks if the given value is a valid Date object.
+ * @param date - The value to check.
+ * @returns True if the value is a valid Date object, false otherwise.
+ */
+export const isDate = (date: any): date is Date => {
+    return date instanceof Date && !isNaN(date.getTime());
+};
+
+/**
+ * Checks if two dates are the same day.
+ * @param date1 - The first date.
+ * @param date2 - The second date.
+ * @returns True if the dates are the same day, false otherwise.
+ */
+export const isSameDay = (date1: Date, date2: Date) => {
+    return (
+        date1.getDate() === date2.getDate() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getFullYear() === date2.getFullYear()
+    );
+};
+
+/**
+ * Checks if two dates are in the same month.
+ * @param date1 - The first date.
+ * @param date2 - The second date.
+ * @returns True if the dates are in the same month, false otherwise.
+ */
+export const isSameMonth = (date1: Date, date2: Date) => {
+    return date1.getMonth() === date2.getMonth() && date1.getFullYear() === date2.getFullYear();
+};
+
+/**
+ * Checks if a date is today.
+ * @param date - The date to check.
+ * @returns True if the date is today, false otherwise.
+ */
+export const isToday = (date: Date) => {
+    return isSameDay(date, new Date());
+};
+
+/**
+ * Sets the day of a given date.
+ *
+ * @param date - The date to modify.
+ * @param day - The day to set.
+ * @returns A new Date object with the modified day.
+ */
+export const setDate = (date: Date, day: number) => {
     const d = new Date(date);
-    d.setFullYear(year);
+    d.setDate(day);
     return d;
-}
+};
 
 /**
  * Sets the month of a given date.
- * 
+ *
  * @param date - The date to modify.
  * @param month - The month to set (0-11).
  * @returns A new Date object with the modified month.
@@ -116,16 +117,14 @@ export const setMonth = (date: Date, month: number) => {
     return d;
 };
 
-
 /**
- * Sets the day of a given date.
- * 
+ * Sets the year of a given date.
  * @param date - The date to modify.
- * @param day - The day to set.
- * @returns A new Date object with the modified day.
+ * @param year - The year to set.
+ * @returns A new Date object with the modified year.
  */
-export const setDate = (date: Date, day: number) => {
+export const setYear = (date: Date, year: number) => {
     const d = new Date(date);
-    d.setDate(day);
+    d.setFullYear(year);
     return d;
 };
