@@ -3,7 +3,7 @@ import { Box, Divider, Grid, IconButton, Paper, Stack } from "@suid/material";
 import ChevronLeftIcon from "@suid/icons-material/ChevronLeft";
 import ChevronRightIcon from "@suid/icons-material/ChevronRight";
 import MonthCalendar, { calendarWidth, extractCommonCalendarProps } from "./MonthCalendar";
-import useDayPicker from "./useDayPicker";
+import useWeeks from "./useWeeks";
 import { CommonCalendarProps, DateRange } from "./models";
 import { addMonths, getToday } from "./dateUtils";
 import { monthAndYear, monthNameLong } from "./dateFormat";
@@ -98,7 +98,7 @@ function DateRangeCalendar(props: MonthRangePickerProps) {
     const range = createMemo(() => props.range);
     const referenceDate = createMemo(() => props.referenceDate);
 
-    const { weeks } = useDayPicker(referenceDate, range);
+    const { weeks } = useWeeks(referenceDate, range);
 
     return (
         <Box width={calendarWidth}>

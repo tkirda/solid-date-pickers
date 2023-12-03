@@ -3,7 +3,14 @@ import { DateRange, DayData, Week } from "./models";
 import { getMonthFirstDay, getDaysInMonth, isSameDay, setDate } from "./dateUtils";
 import { getFirstDayOfWeek } from "./dateFormat";
 
-export default function useDayPicker(
+/**
+ * Custom hook that generates an array of weeks for a given calendar date and selected date.
+ * Each week is an array of DayData objects representing the days in that week.
+ *
+ * @param calendarDate - The calendar date for which to generate the weeks.
+ * @param selectedDate - The selected date or date range.
+ */
+export default function useWeeks(
     calendarDate: Accessor<Date>,
     selectedDate: Accessor<Date | null | undefined> | Accessor<DateRange | null>,
 ) {

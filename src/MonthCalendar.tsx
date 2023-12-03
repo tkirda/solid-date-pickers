@@ -76,7 +76,7 @@ export default function MonthCalendar(props: MonthCalendarProps) {
     };
 
     const getBackgroundColor = (day: DayData | null) => {
-        return day && isInBetween(day) ? "background.default" : undefined;
+        return day && isInBetween(day) ? "rgba(144, 202, 249, 0.12)" : undefined;
     };
 
     const getBorderRadius = (day: DayData | null) => {
@@ -122,7 +122,6 @@ export default function MonthCalendar(props: MonthCalendarProps) {
                                             disabled={isDisabled(day)}
                                             sx={{
                                                 ...sx,
-                                                backgroundColor: getBackgroundColor(day),
                                                 borderWidth: getBorderWidth(day),
                                             }}
                                             onClick={() =>

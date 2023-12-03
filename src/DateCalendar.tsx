@@ -1,8 +1,6 @@
 import { For, Show, createEffect, createMemo, createSignal } from "solid-js";
 import { Button, Grid, IconButton, Paper } from "@suid/material";
-import ChevronLeftIcon from "@suid/icons-material/ChevronLeft";
-import ChevronRightIcon from "@suid/icons-material/ChevronRight";
-import useDayPicker from "./useDayPicker";
+import useWeeks from "./useWeeks";
 import { CommonCalendarProps, MonthData } from "./models";
 import MonthCalendar, {
     calendarHeight,
@@ -11,6 +9,8 @@ import MonthCalendar, {
 } from "./MonthCalendar";
 import { addMonths, addYears, isSameMonth, getToday, setYear, setMonth } from "./dateUtils";
 import { monthAndYear, monthNameShort } from "./dateFormat";
+import ButtonLeft from "./components/ButtonLeft";
+import ButtonRight from "./components/ButtonRight";
 
 export type DayPickerProps = {
     onChange: (date: Date | null) => void;
@@ -90,7 +90,7 @@ export default function DateCalendar(props: DayPickerProps) {
 
     const nextDecade = () => setReferenceDate(addYears(referenceDate(), 20));
 
-    const { weeks } = useDayPicker(calendarDate, selectedDate);
+    const { weeks } = useWeeks(calendarDate, selectedDate);
 
     return (
         <Paper sx={{ width: calendarWidth + 32, p: 2 }}>
@@ -106,12 +106,8 @@ export default function DateCalendar(props: DayPickerProps) {
                         </Button>
                     </Grid>
                     <Grid item>
-                        <IconButton onClick={previousMonth} size="small">
-                            <ChevronLeftIcon />
-                        </IconButton>
-                        <IconButton onClick={nextMonth} size="small">
-                            <ChevronRightIcon />
-                        </IconButton>
+                        <ButtonLeft onClick={previousMonth} />
+                        <ButtonRight onClick={nextMonth} />
                     </Grid>
                 </Grid>
 
@@ -126,12 +122,8 @@ export default function DateCalendar(props: DayPickerProps) {
                         </Button>
                     </Grid>
                     <Grid item>
-                        <IconButton onClick={previousYear}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                        <IconButton onClick={nextYear}>
-                            <ChevronRightIcon />
-                        </IconButton>
+                        <ButtonLeft onClick={previousYear} />
+                        <ButtonRight onClick={nextYear} />
                     </Grid>
                 </Grid>
                 <Grid container minHeight={calendarHeight}>
@@ -161,15 +153,11 @@ export default function DateCalendar(props: DayPickerProps) {
             </Show>
 
             <Show when={selectMode() === "year"}>
-                <Grid container spacing={2} justifyContent="space-between">
+                <Grid container spacing={2} justifyContent="space-between" alignItems="center">
                     <Grid item>{`${first(years())} - ${last(years())}`}</Grid>
                     <Grid item>
-                        <IconButton onClick={previousDecade}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                        <IconButton onClick={nextDecade}>
-                            <ChevronRightIcon />
-                        </IconButton>
+                        <ButtonLeft onClick={previousDecade} />
+                        <ButtonRight onClick={nextDecade} />
                     </Grid>
                 </Grid>
                 <Grid container minHeight={calendarHeight}>

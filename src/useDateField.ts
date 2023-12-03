@@ -31,10 +31,13 @@ const definitions: Record<FragmentKey, Definition> = {
 type DateFieldProps = {
     value?: Date | null;
     format?: string;
-    // eslint-disable-next-line no-unused-vars
     onChange?: (date: Date | null) => void;
 };
 
+/**
+ * Regular expression used to match fragments in the input string.
+ * Fragments are defined by the keys of the `definitions` object.
+ */
 const fragmentsRegEx = new RegExp(`(${Object.keys(definitions).join("|")})`, "g");
 
 const parseFragments = (pattern: string) => {
@@ -64,10 +67,9 @@ const normalizeAmPm = (hours: number) => (hours === 0 || hours === 12 ? 12 : hou
 const toInt = (value: string) => parseInt(value, 10);
 
 /**
- * Custom hook for handling a date field input.
- *
- * @param props - The date field props.
- * @returns An object containing the input reference, error state, and input props.
+ * Custom hook for managing a date field.
+ * @param props - The props for the date field.
+ * @returns An object containing various functions and values for managing the date field.
  */
 export default function useDateField(props: DateFieldProps) {
     const [error, setError] = createSignal(false);
@@ -195,7 +197,13 @@ export default function useDateField(props: DateFieldProps) {
 
         const maxValue = getMaxValue(fragment);
         const value = getValue(fragment);
-        const number = isNumeric(value) ? toInt(value) : fragment.initialValue ?? 0;
+        const number = isNumeric(value) ? toInt(value) : 0;
+
+        if (number === 0 && fragment.initialValue != null) {
+            setValue(fragment, fragment.initialValue);
+            return;
+        }
+
         const nextValue = number === maxValue ? fragment.minValue : number + 1;
 
         setValue(fragment, nextValue);
@@ -209,9 +217,13 @@ export default function useDateField(props: DateFieldProps) {
 
         const maxValue = getMaxValue(fragment);
         const value = getValue(fragment);
-        const number = isNumeric(value)
-            ? toInt(value)
-            : fragment.initialValue ?? fragment.minValue ?? 0;
+        const number = isNumeric(value) ? toInt(value) : fragment.minValue ?? 0;
+
+        if (number === 0 && fragment.initialValue != null) {
+            setValue(fragment, fragment.initialValue);
+            return;
+        }
+
         const nextValue = fragment.minValue === number ? maxValue : number - 1;
 
         setValue(fragment, nextValue);
