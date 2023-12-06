@@ -27,7 +27,7 @@
   "scripts": {
     "dev": "vite",
     "build": "rollup -c",
-    "build:demo": "tsc && vite build",
+    "build:docs": "tsc && vite build --outDir ./docs",
     "typecheck": "tsc",
     "test": "jest --verbose --runInBand",
     "storybook": "storybook dev -p 6006",
