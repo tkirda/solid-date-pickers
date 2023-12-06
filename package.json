@@ -8,20 +8,21 @@
     "picker"
   ],
   "license": "MIT",
-  "main": "dist/cjs/my-lib.js",
-  "module": "dist/esm/my-lib.js",
-  "types": "dist/types/my-lib.d.ts",
+  "homepage": "https://github.com/tkirda/solid-date-pickers",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "type": "module",
   "exports": {
     ".": {
-      "solid": "./dist/source/my-lib.jsx",
-      "import": "./dist/esm/my-lib.js",
-      "browser": "./dist/esm/my-lib.js",
-      "require": "./dist/cjs/my-lib.js",
-      "node": "./dist/cjs/my-lib.js"
+      "solid": "./dist/source/index.js",
+      "import": "./dist/esm/index.js",
+      "browser": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "node": "./dist/cjs/index.js"
     }
   },
   "scripts": {
@@ -32,6 +33,10 @@
     "test": "jest --verbose --runInBand",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tkirda/solid-date-pickers.git"
   },
   "peerDependencies": {
     "@suid/icons-material": "^0.6.11",
