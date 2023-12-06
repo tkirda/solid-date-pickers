@@ -2,6 +2,8 @@
 
 This project provides a set of date picker components built with [SolidJS](https://www.solidjs.com/) and [SUID](https://suid.io/) UI library.
 
+[Demo](https://tkirda.github.io/solid-date-pickers/)
+
 ## Instalation
 
 ```sh
