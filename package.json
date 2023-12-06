@@ -1,7 +1,7 @@
 {
-  "name": "suid-date-picker",
+  "name": "solid-date-pickers",
   "version": "0.1.0",
-  "description": "Date picking components library build on top of @suid/material",
+  "description": "SolidJS date picker components built with @suid/material",
   "keywords": [
     "solid",
     "date",
