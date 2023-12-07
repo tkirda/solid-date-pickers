@@ -25,6 +25,7 @@ import { DateRange } from "../models";
 import Code from "./Code";
 import DateFormat from "../format/DateFormat";
 import GitHubIcon from "./GitHubIcon";
+import "./Demo.css";
 
 export default function Demo() {
     const [date, setDate] = createSignal<Date | null>(null);
@@ -33,8 +34,20 @@ export default function Demo() {
     const [mode, setMode] = createSignal<"dark" | "light">("dark");
     const [locale, setLocale] = createSignal("en-US");
     const shortDateFormat = createMemo(() => new DateFormat(locale()).getShortDateFormat());
+    const darkMode = createMemo(() => mode() === "dark");
 
-    const palette = createMemo(() => createPalette({ mode: mode() }));
+    const palette = createMemo(() =>
+        createPalette(
+            darkMode()
+                ? {
+                      mode: mode(),
+                      background: { default: "#0D1117" },
+                  }
+                : {
+                      mode: mode(),
+                  },
+        ),
+    );
 
     const theme = createTheme({ palette: palette });
 
@@ -45,14 +58,16 @@ export default function Demo() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline enableColorScheme />
-            <Box padding={1}>
+            <Box padding={1} backgroundColor={darkMode() ? "#010409" : "#EEE"} class="header">
                 <Grid container spacing={2} alignItems="center">
                     <Grid item flexGrow={1}>
-                        <Typography variant="h5">SolidJS Date Picker</Typography>
+                        <h1 class={"header-text"}>
+                            SolidJS <span>Date Picker</span>
+                        </h1>
                     </Grid>
                     <Grid item>
                         <IconButton onClick={toggleDarkMode}>
-                            {mode() === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+                            {darkMode() ? <LightModeIcon /> : <DarkModeIcon />}
                         </IconButton>
                     </Grid>
                     <Grid item>
@@ -66,7 +81,6 @@ export default function Demo() {
                     </Grid>
                 </Grid>
             </Box>
-            <Divider />
             <Box maxWidth={800} margin="0 auto" padding={2}>
                 <h2>Overview</h2>
                 <p>
@@ -117,7 +131,7 @@ export default function Demo() {
 
                 <h2>Date Range Calendar</h2>
                 <DateRangeCalendar
-                    calendars={3}
+                    calendars={2}
                     locale={locale()}
                     onChange={setRange1}
                     value={range1()}
@@ -211,7 +225,7 @@ import { DateCalendar } from "solid-date-pickers";
 const dateRangeCalendarSample = `
 import { DateRangeCalendar } from "solid-date-pickers";
 
-<DateRangeCalendar value={range()} calendars={3} onChange={setRange} />
+<DateRangeCalendar value={range()} calendars={2} onChange={setRange} />
 `;
 
 const dateFieldSample = `

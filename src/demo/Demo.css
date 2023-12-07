@@ -1,0 +1,37 @@
+.header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+
+    background-color: rgba(17, 15, 32, 0.769);
+    backdrop-filter: blur(10px);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-text {
+    max-width: 400px;
+
+    /* Additional styling for better appearance */
+    font-size: 40px;
+    font-weight: normal;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0;
+    color: #2e7ff3;
+}
+
+.header-text span {
+    color: #CE9178;
+}
+
+a {
+    color: rgb(47, 129, 247);
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+}

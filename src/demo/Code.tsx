@@ -4,7 +4,7 @@ import Prism from "prismjs";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-markup";
 import "prismjs/components/prism-tsx";
-import "prismjs/themes/prism.css";
+import "prismjs/themes/prism-tomorrow.css";
 
 type CodeProps = {
     source: string;
@@ -21,7 +21,7 @@ export default function Code(props: CodeProps) {
     return (
         <Paper variant="outlined" sx={{ margin: "20px 0" }}>
             <Box component="pre" padding={2} margin={0}>
-                <Box margin={0} class={themeClassName()} component="code" innerHTML={code()} />
+                <Box margin={0} component="code" innerHTML={code()} />
             </Box>
         </Paper>
     );
