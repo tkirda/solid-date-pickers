@@ -24,6 +24,7 @@ import DateRangeCalendar from "../DateRangeCalendar";
 import { DateRange } from "../models";
 import Code from "./Code";
 import DateFormat from "../format/DateFormat";
+import GitHubIcon from "./GitHubIcon";
 
 export default function Demo() {
     const [date, setDate] = createSignal<Date | null>(null);
@@ -52,6 +53,15 @@ export default function Demo() {
                     <Grid item>
                         <IconButton onClick={toggleDarkMode}>
                             {mode() === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
+                        </IconButton>
+                    </Grid>
+                    <Grid item>
+                        <IconButton
+                            component="a"
+                            href="https://github.com/tkirda/solid-date-pickers"
+                            target="_blank"
+                        >
+                            <GitHubIcon />
                         </IconButton>
                     </Grid>
                 </Grid>
