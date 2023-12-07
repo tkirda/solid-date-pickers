@@ -128,13 +128,13 @@ export default function Demo() {
                     <DateField
                         format={shortDateFormat()}
                         label="Date Start"
-                        onChange={(d) => setRange2([d, range1()[1]])}
+                        onChange={(d) => setRange2([d, range2()[1]])}
                         value={range2()[0]}
                     />
                     <DateField
                         format={shortDateFormat()}
                         label="Date End"
-                        onChange={(d) => setRange2([range1()[0], d])}
+                        onChange={(d) => setRange2([range2()[0], d])}
                         value={range2()[1]}
                     />
                 </Stack>
