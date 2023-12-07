@@ -1,8 +1,8 @@
-import { For, splitProps } from "solid-js";
+import { For, createMemo, splitProps } from "solid-js";
 import { CommonCalendarProps, DateRange, DayData, Week } from "./models";
 import { Box, IconButton, Stack, Typography } from "@suid/material";
 import { isSameDay, isToday, getToday } from "./dateUtils";
-import { getFirstDayOfWeek, getWeekDayLabels } from "./dateFormat";
+import DateFormat from "./format/DateFormat";
 
 type MonthCalendarProps = {
     onSelect: (date: Date) => void;
@@ -22,6 +22,7 @@ export const extractCommonCalendarProps = <T extends CommonCalendarProps>(props:
     const [commonProps] = splitProps(props, [
         "disableFuture",
         "disablePast",
+        "locale",
         "maxDate",
         "minDate",
         "readOnly",
@@ -31,8 +32,9 @@ export const extractCommonCalendarProps = <T extends CommonCalendarProps>(props:
 };
 
 export default function MonthCalendar(props: MonthCalendarProps) {
-    const localeFirstDay = getFirstDayOfWeek();
-    const weekDayLabels = getWeekDayLabels(localeFirstDay);
+    const weekDayLabels = createMemo(() =>
+        new DateFormat(props.locale || navigator.language).getWeekDayLabels(),
+    );
 
     const sx = {
         width: 30,
@@ -99,7 +101,7 @@ export default function MonthCalendar(props: MonthCalendarProps) {
     return (
         <Box minHeight={calendarHeight}>
             <Stack direction="row" marginBottom={1} marginTop={1}>
-                <For each={weekDayLabels}>
+                <For each={weekDayLabels()}>
                     {(label) => (
                         <Typography fontWeight="bold" fontSize="small" style={{ flex: 1 }}>
                             {label}

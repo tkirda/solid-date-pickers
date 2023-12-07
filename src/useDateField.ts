@@ -1,6 +1,6 @@
 import { createEffect, createSignal } from "solid-js";
 import { getToday, isDate } from "./dateUtils";
-import { padStart } from "./dateFormat";
+import { padStart } from "./format/stringFormat";
 
 type FragmentKey = "MM" | "DD" | "YYYY" | "HH" | "hh" | "mm" | "ss" | "SSS" | "AM";
 

@@ -16,6 +16,7 @@ export type DateRange = [Date | null, Date | null];
 export type CommonCalendarProps = {
     disableFuture?: boolean;
     disablePast?: boolean;
+    locale?: string;
     maxDate?: Date;
     minDate?: Date;
     readOnly?: boolean;

@@ -8,9 +8,9 @@ import MonthCalendar, {
     extractCommonCalendarProps,
 } from "./MonthCalendar";
 import { addMonths, addYears, isSameMonth, getToday, setYear, setMonth } from "./dateUtils";
-import { monthAndYear, monthNameShort } from "./dateFormat";
 import ButtonLeft from "./components/ButtonLeft";
 import ButtonRight from "./components/ButtonRight";
+import DateFormat from "./format/DateFormat";
 
 export type DayPickerProps = {
     onChange: (date: Date | null) => void;
@@ -32,6 +32,7 @@ const last = <T,>(arr: T[]): T => arr[arr.length - 1];
 
 export default function DateCalendar(props: DayPickerProps) {
     const commonProps = extractCommonCalendarProps(props);
+    const locale = createMemo(() => props.locale || navigator.language);
 
     const selectedDate = createMemo(() => props.value);
     const today = getToday();
@@ -90,7 +91,9 @@ export default function DateCalendar(props: DayPickerProps) {
 
     const nextDecade = () => setReferenceDate(addYears(referenceDate(), 20));
 
-    const { weeks } = useWeeks(calendarDate, selectedDate);
+    const { weeks } = useWeeks(calendarDate, selectedDate, locale);
+
+    const format = createMemo(() => new DateFormat(locale()));
 
     return (
         <Paper sx={{ width: calendarWidth + 32, p: 2 }}>
@@ -102,7 +105,7 @@ export default function DateCalendar(props: DayPickerProps) {
                             sx={{ textTransform: "none" }}
                             onClick={() => setSelectMode("month")}
                         >
-                            {monthAndYear(calendarDate())}
+                            {format().monthAndYear(calendarDate())}
                         </Button>
                     </Grid>
                     <Grid item>
@@ -144,7 +147,7 @@ export default function DateCalendar(props: DayPickerProps) {
                                         setSelectMode("day");
                                     }}
                                 >
-                                    {monthNameShort(month.date)}
+                                    {format().monthNameShort(month.date)}
                                 </IconButton>
                             </Grid>
                         )}

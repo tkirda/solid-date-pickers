@@ -1,12 +1,12 @@
 import { For, createEffect, createMemo, createSignal } from "solid-js";
-import { Box, Divider, Grid, IconButton, Paper, Stack } from "@suid/material";
+import { Box, Divider, Grid, IconButton, Paper } from "@suid/material";
 import ChevronLeftIcon from "@suid/icons-material/ChevronLeft";
 import ChevronRightIcon from "@suid/icons-material/ChevronRight";
 import MonthCalendar, { calendarWidth, extractCommonCalendarProps } from "./MonthCalendar";
 import useWeeks from "./useWeeks";
 import { CommonCalendarProps, DateRange } from "./models";
 import { addMonths, getToday } from "./dateUtils";
-import { monthAndYear, monthNameLong } from "./dateFormat";
+import DateFormat from "./format/DateFormat";
 
 type CalendarCount = 1 | 2 | 3;
 
@@ -97,8 +97,11 @@ function DateRangeCalendar(props: MonthRangePickerProps) {
     const commonProps = extractCommonCalendarProps(props);
     const range = createMemo(() => props.range);
     const referenceDate = createMemo(() => props.referenceDate);
+    const locale = createMemo(() => props.locale || navigator.language);
 
-    const { weeks } = useWeeks(referenceDate, range);
+    const { weeks } = useWeeks(referenceDate, range, locale);
+
+    const dateFormat = createMemo(() => new DateFormat(props.locale || navigator.language));
 
     return (
         <Box width={calendarWidth}>
@@ -110,7 +113,7 @@ function DateRangeCalendar(props: MonthRangePickerProps) {
                         </IconButton>
                     )}
                 </Grid>
-                <Grid item>{monthAndYear(referenceDate())}</Grid>
+                <Grid item>{dateFormat().monthAndYear(referenceDate())}</Grid>
                 <Grid item xs={2}>
                     {props.onNext && (
                         <IconButton onClick={props.onNext}>

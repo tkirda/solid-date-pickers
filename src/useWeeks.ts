@@ -1,7 +1,7 @@
 import { Accessor, createEffect, createSignal } from "solid-js";
 import { DateRange, DayData, Week } from "./models";
 import { getMonthFirstDay, getDaysInMonth, isSameDay, setDate } from "./dateUtils";
-import { getFirstDayOfWeek } from "./dateFormat";
+import DateFormat from "./format/DateFormat";
 
 /**
  * Custom hook that generates an array of weeks for a given calendar date and selected date.
@@ -13,13 +13,14 @@ import { getFirstDayOfWeek } from "./dateFormat";
 export default function useWeeks(
     calendarDate: Accessor<Date>,
     selectedDate: Accessor<Date | null | undefined> | Accessor<DateRange | null>,
+    locale: Accessor<string>,
 ) {
     const [weeks, setWeeks] = createSignal<Week[]>([]);
 
     createEffect(() => {
         const currentDate = calendarDate();
         const daysInMonth = getDaysInMonth(currentDate);
-        const firstDayOfWeek = getFirstDayOfWeek();
+        const firstDayOfWeek = new DateFormat(locale()).getFirstDayOfWeek();
         const dayOfWeek = getMonthFirstDay(currentDate);
         const weekStartsOnSunday = firstDayOfWeek === 7;
 
