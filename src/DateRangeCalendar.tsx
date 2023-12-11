@@ -1,8 +1,8 @@
 import { For, createEffect, createMemo, createSignal } from "solid-js";
 import { Divider, Grid, Paper } from "@suid/material";
 import { extractCommonCalendarProps } from "./MonthCalendar";
-import { CommonCalendarProps, DateRange } from "./models";
-import { addMonths, getToday } from "./dateUtils";
+import { CommonCalendarProps, DateRange, Optional } from "./models";
+import { addMonths, getToday, isSameDay } from "./dateUtils";
 import DateRangeMonthCalendar from "./DateRangeMonthCalendar";
 
 type CalendarCount = 1 | 2 | 3;
@@ -26,9 +26,18 @@ export default function DateRangeCalendar(props: DateRangeCalendarProps) {
 
     const calendarCount = createMemo(() => props.calendars || 2);
 
-    createEffect(() => {
+    createEffect((prevStartDate: Optional<Date>) => {
         setRange(props.value);
-    });
+
+        const startDate = props.value[0];
+
+        // When the start date changes, update the calendar date.
+        if (prevStartDate && startDate && !isSameDay(prevStartDate, startDate)) {
+            setCalendarDate(startDate);
+        }
+
+        return startDate;
+    }, props.value[0]);
 
     const calendarDates = createMemo(() =>
         Array.from({ length: calendarCount() }, (_, i) => addMonths(calendarDate(), i)),
