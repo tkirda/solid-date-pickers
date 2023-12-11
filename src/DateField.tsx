@@ -1,13 +1,14 @@
 import { ComponentProps, splitProps } from "solid-js";
 import { TextField } from "@suid/material";
 import useDateField from "./useDateField";
+import { Optional } from "./models";
 
 type TextFieldProps = ComponentProps<typeof TextField>;
 
 export type DateFieldProps = {
-    value?: Date | null;
+    value?: Optional<Date>;
     format?: string;
-    onChange?: (date: Date | null) => void;
+    onChange?: (date: Optional<Date>) => void;
 } & Omit<TextFieldProps, "value" | "onChange">;
 
 export default function DateField(props: DateFieldProps) {

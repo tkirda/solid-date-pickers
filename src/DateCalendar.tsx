@@ -1,7 +1,7 @@
 import { For, Show, createEffect, createMemo, createSignal } from "solid-js";
 import { Button, Grid, IconButton, Paper } from "@suid/material";
 import useWeeks from "./useWeeks";
-import { CommonCalendarProps, MonthData } from "./models";
+import { CommonCalendarProps, MonthData, Optional } from "./models";
 import MonthCalendar, {
     calendarHeight,
     calendarWidth,
@@ -13,9 +13,9 @@ import ButtonRight from "./components/ButtonRight";
 import DateFormat from "./format/DateFormat";
 
 export type DateCalendarProps = {
-    onChange: (date: Date | null) => void;
+    onChange: (date: Optional<Date>) => void;
     referenceDate?: Date;
-    value?: Date | null;
+    value?: Optional<Date>;
 } & CommonCalendarProps;
 
 type Mode = "day" | "month" | "year";

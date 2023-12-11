@@ -1,6 +1,7 @@
 import { createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 import { getToday, isDate } from "./dateUtils";
 import { padStart } from "./format/stringFormat";
+import { Optional } from "./models";
 
 type FragmentKey = "MM" | "DD" | "YYYY" | "HH" | "hh" | "mm" | "ss" | "SSS" | "AM";
 
@@ -29,9 +30,9 @@ const definitions: Record<FragmentKey, Definition> = {
 };
 
 type DateFieldProps = {
-    value?: Date | null;
+    value?: Optional<Date>;
     format?: string;
-    onChange?: (date: Date | null) => void;
+    onChange?: (date: Optional<Date>) => void;
 };
 
 /**
@@ -78,11 +79,12 @@ export default function useDateField(props: DateFieldProps) {
 
     let input: HTMLInputElement;
 
-    createEffect(() => {
+    createEffect((prevValue: Optional<Date>) => {
         const value = props.value;
         const f = format();
+        const fragments = parseFragments(f);
 
-        setFragments(parseFragments(f));
+        setFragments(fragments);
 
         if (!input) {
             throw new Error("Input element has not been set. Make sure to use the inputRef.");
@@ -111,9 +113,17 @@ export default function useDateField(props: DateFieldProps) {
         } else {
             if (!input.value) {
                 input.value = f;
+                return;
+            }
+
+            // State has changed from a date to null
+            if (prevValue) {
+                input.value = f;
             }
         }
-    });
+
+        return value;
+    }, props.value);
 
     const isLastFragment = () => {
         const index = getCurrentFragmentIndex();

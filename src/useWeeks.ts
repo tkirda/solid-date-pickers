@@ -1,5 +1,5 @@
 import { Accessor, createEffect, createSignal } from "solid-js";
-import { DateRange, DayData, Week } from "./models";
+import { DateRange, DayData, Optional, Week } from "./models";
 import { getMonthFirstDay, getDaysInMonth, isSameDay, setDate } from "./dateUtils";
 import DateFormat from "./format/DateFormat";
 
@@ -12,7 +12,7 @@ import DateFormat from "./format/DateFormat";
  */
 export default function useWeeks(
     calendarDate: Accessor<Date>,
-    selectedDate: Accessor<Date | null | undefined> | Accessor<DateRange | null>,
+    selectedDate: Accessor<Optional<Date>> | Accessor<DateRange | null>,
     locale: Accessor<string>,
 ) {
     const [weeks, setWeeks] = createSignal<Week[]>([]);

@@ -21,14 +21,14 @@ import DarkModeIcon from "@suid/icons-material/DarkMode";
 import DateField from "../DateField";
 import DateCalendar from "../DateCalendar";
 import DateRangeCalendar from "../DateRangeCalendar";
-import { DateRange } from "../models";
+import { DateRange, Optional } from "../models";
 import Code from "./Code";
 import DateFormat from "../format/DateFormat";
 import GitHubIcon from "./GitHubIcon";
 import "./Demo.css";
 
 export default function Demo() {
-    const [date, setDate] = createSignal<Date | null>(null);
+    const [date, setDate] = createSignal<Optional<Date>>();
     const [range1, setRange1] = createSignal<DateRange>([null, null]);
     const [range2, setRange2] = createSignal<DateRange>([null, null]);
     const [mode, setMode] = createSignal<"dark" | "light">("dark");

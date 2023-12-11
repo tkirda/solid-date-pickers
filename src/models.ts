@@ -11,7 +11,7 @@ export type MonthData = {
     selected: boolean;
 };
 
-export type DateRange = [Date | null, Date | null];
+export type DateRange = [Optional<Date>, Optional<Date>];
 
 export type CommonCalendarProps = {
     disableFuture?: boolean;
@@ -25,3 +25,5 @@ export type CommonCalendarProps = {
     // TODO: Implement these
     // showDaysOutsideCurrentMonth?: boolean;
 };
+
+export type Optional<T> = T | null | undefined;
