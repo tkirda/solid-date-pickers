@@ -1,23 +1,20 @@
 import { For, createEffect, createMemo, createSignal } from "solid-js";
-import { Box, Divider, Grid, IconButton, Paper } from "@suid/material";
-import ChevronLeftIcon from "@suid/icons-material/ChevronLeft";
-import ChevronRightIcon from "@suid/icons-material/ChevronRight";
-import MonthCalendar, { calendarWidth, extractCommonCalendarProps } from "./MonthCalendar";
-import useWeeks from "./useWeeks";
+import { Divider, Grid, Paper } from "@suid/material";
+import { extractCommonCalendarProps } from "./MonthCalendar";
 import { CommonCalendarProps, DateRange } from "./models";
 import { addMonths, getToday } from "./dateUtils";
-import DateFormat from "./format/DateFormat";
+import DateRangeMonthCalendar from "./DateRangeMonthCalendar";
 
 type CalendarCount = 1 | 2 | 3;
 
-type DateRangePickerProps = {
+export type DateRangeCalendarProps = {
     calendars?: CalendarCount;
     onChange: (value: DateRange) => void;
     referenceDate?: Date;
     value: DateRange;
 } & CommonCalendarProps;
 
-export default function DateRangePicker(props: DateRangePickerProps) {
+export default function DateRangeCalendar(props: DateRangeCalendarProps) {
     const commonProps = extractCommonCalendarProps(props);
 
     const [range, setRange] = createSignal<DateRange>(props.value || [null, null]);
@@ -63,7 +60,7 @@ export default function DateRangePicker(props: DateRangePickerProps) {
                     {(referenceDate, index) => (
                         <>
                             <Grid item>
-                                <DateRangeCalendar
+                                <DateRangeMonthCalendar
                                     {...commonProps}
                                     onNext={isLast(index()) ? nextMonth : undefined}
                                     onPrevious={index() === 0 ? prevMonth : undefined}
@@ -82,52 +79,5 @@ export default function DateRangePicker(props: DateRangePickerProps) {
                 </For>
             </Grid>
         </Paper>
-    );
-}
-
-type MonthRangePickerProps = {
-    onNext?: () => void;
-    onPrevious?: () => void;
-    onSelect: (date: Date) => void;
-    range: DateRange;
-    referenceDate: Date;
-} & CommonCalendarProps;
-
-function DateRangeCalendar(props: MonthRangePickerProps) {
-    const commonProps = extractCommonCalendarProps(props);
-    const range = createMemo(() => props.range);
-    const referenceDate = createMemo(() => props.referenceDate);
-    const locale = createMemo(() => props.locale || navigator.language);
-
-    const { weeks } = useWeeks(referenceDate, range, locale);
-
-    const dateFormat = createMemo(() => new DateFormat(props.locale || navigator.language));
-
-    return (
-        <Box width={calendarWidth}>
-            <Grid container justifyContent="space-between" alignItems="center" height={40}>
-                <Grid item xs={2}>
-                    {props.onPrevious && (
-                        <IconButton onClick={props.onPrevious}>
-                            <ChevronLeftIcon />
-                        </IconButton>
-                    )}
-                </Grid>
-                <Grid item>{dateFormat().monthAndYear(referenceDate())}</Grid>
-                <Grid item xs={2}>
-                    {props.onNext && (
-                        <IconButton onClick={props.onNext}>
-                            <ChevronRightIcon />
-                        </IconButton>
-                    )}
-                </Grid>
-            </Grid>
-            <MonthCalendar
-                {...commonProps}
-                onSelect={props.onSelect}
-                range={props.range}
-                weeks={weeks()}
-            />
-        </Box>
     );
 }

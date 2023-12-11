@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "storybook-solidjs";
 
-import DateCalendar, { DayPickerProps } from "../DateCalendar";
+import DateCalendar, { DateCalendarProps } from "../DateCalendar";
 
 // More on how to set up stories at: https://storybook.js.org/docs/7.0/solid/writing-stories/introduction
 const meta = {

@@ -4,7 +4,7 @@ import useDateField from "./useDateField";
 
 type TextFieldProps = ComponentProps<typeof TextField>;
 
-type DateFieldProps = {
+export type DateFieldProps = {
     value?: Date | null;
     format?: string;
     onChange?: (date: Date | null) => void;

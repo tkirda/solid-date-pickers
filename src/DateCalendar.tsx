@@ -12,7 +12,7 @@ import ButtonLeft from "./components/ButtonLeft";
 import ButtonRight from "./components/ButtonRight";
 import DateFormat from "./format/DateFormat";
 
-export type DayPickerProps = {
+export type DateCalendarProps = {
     onChange: (date: Date | null) => void;
     referenceDate?: Date;
     value?: Date | null;
@@ -30,7 +30,7 @@ const first = <T,>(arr: T[]): T => arr[0];
  */
 const last = <T,>(arr: T[]): T => arr[arr.length - 1];
 
-export default function DateCalendar(props: DayPickerProps) {
+export default function DateCalendar(props: DateCalendarProps) {
     const commonProps = extractCommonCalendarProps(props);
     const locale = createMemo(() => props.locale || navigator.language);
 
