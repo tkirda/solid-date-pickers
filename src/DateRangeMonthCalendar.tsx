@@ -10,7 +10,10 @@ import DateFormat from "./format/DateFormat";
 type DateRangeMonthCalendarProps = {
     onNext?: () => void;
     onPrevious?: () => void;
+    onMouseOut?: () => void;
+    onMouseOver?: (date: Date) => void;
     onSelect: (date: Date) => void;
+    overDate?: Date;
     range: DateRange;
     referenceDate: Date;
 } & CommonCalendarProps;
@@ -46,7 +49,10 @@ export default function DateRangeMonthCalendar(props: DateRangeMonthCalendarProp
             </Grid>
             <MonthCalendar
                 {...commonProps}
+                onMouseOut={props.onMouseOut}
+                onMouseOver={props.onMouseOver}
                 onSelect={props.onSelect}
+                overDate={props.overDate}
                 range={props.range}
                 weeks={weeks()}
             />

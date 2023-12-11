@@ -5,13 +5,19 @@ import { isSameDay, isToday, getToday } from "./dateUtils";
 import DateFormat from "./format/DateFormat";
 
 type MonthCalendarProps = {
+    onMouseOut?: () => void;
+    onMouseOver?: (date: Date) => void;
     onSelect: (date: Date) => void;
+    overDate?: Date;
     range?: DateRange;
     weeks: Week[];
 } & CommonCalendarProps;
 
-const getBorderWidth = (day: DayData) => {
-    return day.selected ? 2 : isToday(day.date) ? 1 : undefined;
+const getBorderWidth = (day: DayData, disableHighlightToday?: boolean) => {
+    if (day.selected) return 2;
+    if (disableHighlightToday) return undefined;
+
+    return isToday(day.date) ? 1 : undefined;
 };
 
 export const calendarWidth = 240;
@@ -21,6 +27,7 @@ export const calendarHeight = 210;
 export const extractCommonCalendarProps = <T extends CommonCalendarProps>(props: T) => {
     const [commonProps] = splitProps(props, [
         "disableFuture",
+        "disableHighlightToday",
         "disablePast",
         "locale",
         "maxDate",
@@ -49,10 +56,18 @@ export default function MonthCalendar(props: MonthCalendarProps) {
             return false;
         }
 
-        const [start, end] = props.range;
+        const [rangeStart, rangeEnd] = props.range;
+
+        let start = rangeStart;
+        let end = rangeEnd || props.overDate;
 
         if (!start || !end) {
             return false;
+        }
+
+        // Swap start and end if start is after end
+        if (start > end) {
+            [start, end] = [end, start];
         }
 
         return (
@@ -86,7 +101,19 @@ export default function MonthCalendar(props: MonthCalendarProps) {
             return undefined;
         }
 
-        const [start, end] = props.range;
+        const [rangeStart, rangeEnd] = props.range;
+
+        let end = rangeEnd || props.overDate;
+        let start = rangeStart;
+
+        // Swap start and end if start is after end
+        if (start && end && start > end) {
+            [start, end] = [end, start];
+        }
+
+        if (start && end && isSameDay(start, end)) {
+            return "50%";
+        }
 
         // Round the first and last day of the range
         if (start && isSameDay(start, day.date)) {
@@ -103,7 +130,7 @@ export default function MonthCalendar(props: MonthCalendarProps) {
             <Stack direction="row" marginBottom={1} marginTop={1}>
                 <For each={weekDayLabels()}>
                     {(label) => (
-                        <Typography fontWeight="bold" fontSize="small" style={{ flex: 1 }}>
+                        <Typography fontWeight="bold" fontSize="small" flex={1}>
                             {label}
                         </Typography>
                     )}
@@ -124,10 +151,19 @@ export default function MonthCalendar(props: MonthCalendarProps) {
                                             disabled={isDisabled(day)}
                                             sx={{
                                                 ...sx,
-                                                borderWidth: getBorderWidth(day),
+                                                borderWidth: getBorderWidth(
+                                                    day,
+                                                    props.disableHighlightToday,
+                                                ),
                                             }}
-                                            onClick={() =>
-                                                !props.readOnly && props.onSelect(day.date)
+                                            onClick={
+                                                props.readOnly
+                                                    ? undefined
+                                                    : () => props.onSelect(day.date)
+                                            }
+                                            onMouseOut={props.onMouseOut}
+                                            onMouseOver={
+                                                props.onMouseOver && [props.onMouseOver, day.date]
                                             }
                                         >
                                             {day.day}

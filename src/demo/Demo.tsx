@@ -125,13 +125,19 @@ export default function Demo() {
                 <Code source={dateFieldSample} />
 
                 <h2>Date Calendar</h2>
-                <DateCalendar value={date()} onChange={setDate} locale={locale()} />
+                <DateCalendar
+                    disableHighlightToday
+                    locale={locale()}
+                    onChange={setDate}
+                    value={date()}
+                />
 
                 <Code source={dateCalendarSample} />
 
                 <h2>Date Range Calendar</h2>
                 <DateRangeCalendar
                     calendars={2}
+                    disableHighlightToday
                     locale={locale()}
                     onChange={setRange1}
                     value={range1()}
@@ -165,6 +171,7 @@ export default function Demo() {
                 <br />
                 <DateRangeCalendar
                     calendars={2}
+                    disableHighlightToday
                     locale={locale()}
                     onChange={setRange2}
                     value={range2()}

@@ -18,6 +18,7 @@ export default function DateRangeCalendar(props: DateRangeCalendarProps) {
     const commonProps = extractCommonCalendarProps(props);
 
     const [range, setRange] = createSignal<DateRange>(props.value || [null, null]);
+    const [overDate, setOverDate] = createSignal<Date | undefined>();
 
     const [calendarDate, setCalendarDate] = createSignal(
         range()[0] || props.referenceDate || getToday(),
@@ -51,6 +52,24 @@ export default function DateRangeCalendar(props: DateRangeCalendarProps) {
         props.onChange(range());
     };
 
+    let timeout: ReturnType<typeof setTimeout>;
+
+    const handleMouseOut = () => {
+        // This is to prevent the overDate from being cleared
+        // when the mouse moves from one day to another.
+        timeout = setTimeout(() => setOverDate(undefined), 100);
+    };
+
+    const handleMouseOver = (date: Date) => {
+        clearTimeout(timeout);
+
+        const [start] = range();
+
+        if (!start) return;
+
+        setOverDate(date);
+    };
+
     const isLast = (index: number) => calendarCount() - 1 === index;
 
     return (
@@ -65,6 +84,9 @@ export default function DateRangeCalendar(props: DateRangeCalendarProps) {
                                     onNext={isLast(index()) ? nextMonth : undefined}
                                     onPrevious={index() === 0 ? prevMonth : undefined}
                                     onSelect={handleSelect}
+                                    onMouseOut={handleMouseOut}
+                                    onMouseOver={handleMouseOver}
+                                    overDate={overDate()}
                                     range={range()}
                                     referenceDate={referenceDate}
                                 />
