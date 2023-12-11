@@ -1,4 +1,4 @@
-import { createEffect, createSignal } from "solid-js";
+import { createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 import { getToday, isDate } from "./dateUtils";
 import { padStart } from "./format/stringFormat";
 
@@ -74,17 +74,15 @@ const toInt = (value: string) => parseInt(value, 10);
 export default function useDateField(props: DateFieldProps) {
     const [error, setError] = createSignal(false);
     const [fragments, setFragments] = createSignal<Fragment[]>([]);
-    const baseDate = getToday();
-
-    const getFormat = () => props.format || defaultFormat;
+    const format = createMemo(() => props.format || defaultFormat);
 
     let input: HTMLInputElement;
 
     createEffect(() => {
         const value = props.value;
-        const format = getFormat();
+        const f = format();
 
-        setFragments(parseFragments(format));
+        setFragments(parseFragments(f));
 
         if (!input) {
             throw new Error("Input element has not been set. Make sure to use the inputRef.");
@@ -94,7 +92,7 @@ export default function useDateField(props: DateFieldProps) {
             const fmt = (value: number, length = 2) => padStart(String(value), length, "0");
             const hours = value.getHours();
 
-            const formatted = format
+            const formatted = f
                 .replace("MM", fmt(value.getMonth() + 1))
                 .replace("DD", fmt(value.getDate()))
                 .replace("YYYY", fmt(value.getFullYear(), 4))
@@ -111,8 +109,9 @@ export default function useDateField(props: DateFieldProps) {
                 selectFragment(fragment);
             }
         } else {
-            input.value = format;
-            setError(false);
+            if (!input.value) {
+                input.value = f;
+            }
         }
     });
 
@@ -123,7 +122,9 @@ export default function useDateField(props: DateFieldProps) {
 
     const getCurrentFragmentIndex = () => {
         const selectionStart = input.selectionStart || 0;
-        return fragments().findLastIndex((f) => f.start <= selectionStart) || 0;
+        const lastIndex = fragments().findLastIndex((f) => f.start <= selectionStart);
+
+        return lastIndex === -1 ? 0 : lastIndex;
     };
 
     const getCurrentFragment = () => fragments()[getCurrentFragmentIndex()];
@@ -373,16 +374,19 @@ export default function useDateField(props: DateFieldProps) {
         }
     };
 
-    const inputRef = (el: HTMLInputElement) => {
-        input = el;
-    };
-
     const onFocus = () => {
         if (input.value === "") {
-            input.value = getFormat();
+            input.value = format();
         }
 
         selectFirstFragment();
+    };
+
+    const onBlur = () => {
+        if (input.value === format()) {
+            input.value = "";
+            setError(false);
+        }
     };
 
     const onMouseUp = () => {
@@ -398,7 +402,7 @@ export default function useDateField(props: DateFieldProps) {
         // Get the value of the fragment or value from the base date
         const fragmentValue = (key: FragmentKey) => {
             const fragment = fragments().find((f) => f.key === key);
-            const base = props.value || baseDate;
+            const base = props.value || getToday();
 
             if (fragment) {
                 return toInt(getValue(fragment)) || 0;
@@ -476,9 +480,9 @@ export default function useDateField(props: DateFieldProps) {
     };
 
     const onChange = () => {
-        const format = props.format || defaultFormat;
+        const fmt = format();
 
-        if (input.value === format) {
+        if (input.value === fmt) {
             setError(false);
             if (props.value) {
                 props.onChange?.(null);
@@ -499,9 +503,36 @@ export default function useDateField(props: DateFieldProps) {
         e.preventDefault();
     };
 
+    const eventHandlers = new Map<string, (e: any) => void>([
+        ["blur", onBlur],
+        ["change", onChange],
+        ["dragstart", onDragStart],
+        ["focus", onFocus],
+        ["keydown", onKeyDown],
+        ["mouseup", onMouseUp],
+        ["paste", onPaste],
+    ]);
+
+    const inputRef = (el: HTMLInputElement) => {
+        input = el;
+
+        if (!input) return;
+
+        for (const [name, handler] of eventHandlers.entries()) {
+            input.addEventListener(name, handler);
+        }
+    };
+
+    onCleanup(() => {
+        if (!input) return;
+
+        for (const [name, handler] of eventHandlers.entries()) {
+            input.removeEventListener(name, handler);
+        }
+    });
+
     return {
         inputRef,
         error,
-        inputProps: { onKeyDown, onFocus, onMouseUp, onPaste, onChange, onDragStart },
     };
 }

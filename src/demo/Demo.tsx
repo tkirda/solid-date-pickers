@@ -62,7 +62,7 @@ export default function Demo() {
                 <Grid container spacing={2} alignItems="center">
                     <Grid item flexGrow={1}>
                         <h1 class={"header-text"}>
-                            SolidJS <span>Date Picker</span>
+                            SolidJS <span class="gradient-text">Date Picker</span>
                         </h1>
                     </Grid>
                     <Grid item>

@@ -1,37 +1,35 @@
 .header {
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    z-index: 1030;
-
-    background-color: rgba(17, 15, 32, 0.769);
     backdrop-filter: blur(10px);
-
+    background-color: rgba(17, 15, 32, 0.769);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1030;
 }
 
 .header-text {
-    max-width: 400px;
-
-    /* Additional styling for better appearance */
     font-size: 40px;
-    font-weight: normal;
+    font-weight: bold;
     line-height: 1.2;
     margin: 0;
+    max-width: 400px;
     padding: 0;
-    color: #2e7ff3;
-}
-
-.header-text span {
-    color: #CE9178;
 }
 
 a {
-    color: rgb(47, 129, 247);
+    color: #2f81f7;
     text-decoration: underline;
 }
 
 a:hover {
     text-decoration: none;
+}
+
+.gradient-text {
+    background-image: linear-gradient(to right, #e94970, #9051d4);
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
 }

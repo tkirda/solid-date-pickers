@@ -12,7 +12,7 @@ type DateFieldProps = {
 
 export default function DateField(props: DateFieldProps) {
     const [local, other] = splitProps(props, ["value", "format", "onChange"]);
-    const { inputRef, error, inputProps } = useDateField(local);
+    const { inputRef, error } = useDateField(local);
 
-    return <TextField {...other} inputRef={inputRef} error={error()} inputProps={inputProps} />;
+    return <TextField {...other} error={props.error || error()} inputRef={inputRef} />;
 }
