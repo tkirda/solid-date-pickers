@@ -17,12 +17,13 @@ export type DateRangeCalendarProps = {
 export default function DateRangeCalendar(props: DateRangeCalendarProps) {
     const commonProps = extractCommonCalendarProps(props);
 
-    const [range, setRange] = createSignal<DateRange>(props.value || [null, null]);
+    const [range, setRange] = createSignal<DateRange>([null, null]);
     const [overDate, setOverDate] = createSignal<Date | undefined>();
 
-    const [calendarDate, setCalendarDate] = createSignal(
-        range()[0] || props.referenceDate || getToday(),
-    );
+    // eslint-disable-next-line solid/reactivity
+    const initialCalendarDate = props.value[0] || props.referenceDate || getToday();
+
+    const [calendarDate, setCalendarDate] = createSignal(initialCalendarDate);
 
     const calendarCount = createMemo(() => props.calendars || 2);
 
@@ -37,11 +38,14 @@ export default function DateRangeCalendar(props: DateRangeCalendarProps) {
         }
 
         return startDate;
-    }, props.value[0]);
+    }, initialCalendarDate);
 
-    const calendarDates = createMemo(() =>
-        Array.from({ length: calendarCount() }, (_, i) => addMonths(calendarDate(), i)),
-    );
+    const calendarDates = createMemo(() => {
+        const cd = calendarDate();
+        const length = calendarCount();
+
+        return Array.from({ length }, (_, i) => addMonths(cd, i));
+    });
 
     const prevMonth = () => setCalendarDate(addMonths(calendarDate(), -1));
 
@@ -49,16 +53,19 @@ export default function DateRangeCalendar(props: DateRangeCalendarProps) {
 
     const handleSelect = (date: Date) => {
         const [start, end] = range();
+        let r: DateRange = [null, null];
 
         if ((!start && !end) || (start && end)) {
-            setRange([date, null]);
+            r = [date, null];
         } else if (start) {
-            setRange(date < start ? [date, start] : [start, date]);
+            r = date < start ? [date, start] : [start, date];
         } else if (end) {
-            setRange(date < end ? [date, end] : [end, date]);
+            r = date < end ? [date, end] : [end, date];
         }
 
-        props.onChange(range());
+        setRange(r);
+
+        props.onChange(r);
     };
 
     let timeout: ReturnType<typeof setTimeout>;

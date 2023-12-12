@@ -1,3 +1,4 @@
+/* eslint-disable solid/no-innerhtml */
 import { Show, createMemo, createSignal } from "solid-js";
 import { Box, Button, Paper } from "@suid/material";
 import CodeIcon from "@suid/icons-material/Code";

@@ -45,7 +45,7 @@ const last = <T,>(arr: T[]): T => arr[arr.length - 1];
 export default function DateCalendar(props: DateCalendarProps) {
     const commonProps = extractCommonCalendarProps(props);
     const locale = createMemo(() => props.locale || defaultLocale());
-    const value = createMemo(() => (props.value ? new Date(props.value) : undefined));
+    const value = createMemo(() => props.value);
     const today = getToday();
 
     const [selectMode, setSelectMode] = createSignal<Mode>("day");
@@ -53,16 +53,18 @@ export default function DateCalendar(props: DateCalendarProps) {
     const [years, setYears] = createSignal<number[]>([]);
 
     // The reference date is used when display mode is "month" or "year".
-    const [referenceDate, setReferenceDate] = createSignal(
-        value() || props.referenceDate || today,
-    );
+    const [referenceDate, setReferenceDate] = createSignal(today);
 
     // The calendar date is used when displayed mode is "day".
-    const [calendarDate, setCalendarDate] = createSignal(referenceDate());
+    const [calendarDate, setCalendarDate] = createSignal(today);
 
-    // When the value changes, update the calendar date.
     createEffect(() => {
-        setCalendarDate(value() || today);
+        const valueDate = props.value;
+        const referenceDate = props.referenceDate || today;
+        const date = valueDate || referenceDate;
+
+        setReferenceDate(date);
+        setCalendarDate(date);
     });
 
     // When the reference date changes, update months and years.

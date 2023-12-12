@@ -2,6 +2,7 @@ import { createMemo, createSignal } from "solid-js";
 import {
     Box,
     CssBaseline,
+    Divider,
     Grid,
     IconButton,
     ThemeProvider,
@@ -19,6 +20,7 @@ import DateRangeCalendarDemo from "./DateRangeCalendarDemo";
 import { setDefaultLocale } from "../locale";
 import DateRangeWithInputsDemo from "./DateRangeWithInputsDemo";
 import SetDefaultLocale from "./SetDefaultLocale";
+import DateCalendarWithInputDemo from "./DateCalendarWithInputDemo";
 
 // @ts-expect-error: source code
 import DateCalendarDemoSource from "./DateCalendarDemo?raw";
@@ -30,6 +32,8 @@ import DateRangeCalendarDemoSource from "./DateRangeCalendarDemo?raw";
 import DateRangeWithInputsDemoSource from "./DateRangeWithInputsDemo?raw";
 // @ts-expect-error: source code
 import SetDefaultLocaleSource from "./SetDefaultLocale?raw";
+// @ts-expect-error: source code
+import DateCalendarWithInputDemoSource from "./DateCalendarWithInputDemo?raw";
 
 setDefaultLocale("en-US");
 
@@ -95,15 +99,19 @@ export default function Demo() {
                     .
                 </p>
 
+                <Divider />
+
                 <h2>Date Field</h2>
                 <p>The DateField component lets users select a date with the keyboard.</p>
                 <DateFieldDemo />
                 <Code source={DateFieldDemoSource} />
+                <Divider />
 
                 <h2>Date Calendar</h2>
                 <p>The DateCalendar component lets users select a date from a calendar.</p>
                 <DateCalendarDemo />
                 <Code source={DateCalendarDemoSource} />
+                <Divider />
 
                 <h2>Date Range Calendar</h2>
                 <p>
@@ -111,6 +119,7 @@ export default function Demo() {
                 </p>
                 <DateRangeCalendarDemo />
                 <Code source={DateRangeCalendarDemoSource} />
+                <Divider />
 
                 <h2>Localization</h2>
                 <p>
@@ -123,11 +132,16 @@ export default function Demo() {
                 </p>
                 <SetDefaultLocale />
                 <Code source={SetDefaultLocaleSource} />
+                <Divider />
 
                 <h2>Samples</h2>
                 <h3>Date Range Calendar with Inputs </h3>
                 <DateRangeWithInputsDemo />
                 <Code source={DateRangeWithInputsDemoSource} />
+
+                <h3>Date Calendar with Input</h3>
+                <DateCalendarWithInputDemo />
+                <Code source={DateCalendarWithInputDemoSource} />
             </Box>
         </ThemeProvider>
     );

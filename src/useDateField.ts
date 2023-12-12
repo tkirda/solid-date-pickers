@@ -102,7 +102,7 @@ export default function useDateField(props: DateFieldProps) {
 
     let input: HTMLInputElement;
 
-    createEffect((prevValue: Optional<Date>) => {
+    createEffect(() => {
         const value = props.value;
         const f = format();
         const fragments = parseFragments(f);
@@ -135,10 +135,9 @@ export default function useDateField(props: DateFieldProps) {
             }
         } else {
             input.value = f;
+            selectFirstFragment();
         }
-
-        return value;
-    }, props.value);
+    });
 
     const isLastFragment = () => {
         const index = getCurrentFragmentIndex();
@@ -519,7 +518,9 @@ export default function useDateField(props: DateFieldProps) {
 
         setError(!date);
 
-        if (date !== props.value) {
+        // Do not use strict equality here because
+        // we may be comparing null to undefined
+        if (date != props.value) {
             props.onChange?.(date);
         }
     };

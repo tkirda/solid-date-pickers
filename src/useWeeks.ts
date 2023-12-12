@@ -1,6 +1,6 @@
 import { Accessor, createEffect, createSignal } from "solid-js";
 import { DateRange, DayData, Optional, Week } from "./models";
-import { getMonthFirstDay, getDaysInMonth, isSameDay, setDate } from "./dateUtils";
+import { getMonthFirstDay, getDaysInMonth, isSameDay, setDate, isDate } from "./dateUtils";
 import DateFormat from "./format/DateFormat";
 
 /**
@@ -18,7 +18,9 @@ export default function useWeeks(
     const [weeks, setWeeks] = createSignal<Week[]>([]);
 
     createEffect(() => {
+        console.log("useWeeks effect");
         const currentDate = calendarDate();
+        const dateOrRange = selectedDate();
         const daysInMonth = getDaysInMonth(currentDate);
         const firstDayOfWeek = new DateFormat(locale()).getFirstDayOfWeek();
         const dayOfWeek = getMonthFirstDay(currentDate);
@@ -32,12 +34,13 @@ export default function useWeeks(
         const days = Array.from({ length: daysInMonth }, (_, i) => {
             const day = i + 1;
             const date = setDate(currentDate, day);
-            const dateOrRange = selectedDate();
 
             const selected = Boolean(
                 Array.isArray(dateOrRange)
-                    ? dateOrRange.some((d) => d && isSameDay(date, d))
-                    : dateOrRange && isSameDay(date, dateOrRange),
+                    ? dateOrRange.some((d) => isDate(d) && isSameDay(date, d))
+                    : isDate(dateOrRange)
+                      ? isSameDay(date, dateOrRange)
+                      : false,
             );
 
             const data: DayData = {
