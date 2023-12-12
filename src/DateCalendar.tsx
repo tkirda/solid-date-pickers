@@ -13,8 +13,19 @@ import ButtonRight from "./components/ButtonRight";
 import DateFormat from "./format/DateFormat";
 
 export type DateCalendarProps = {
+    /**
+     * On change callback.
+     */
     onChange: (date: Optional<Date>) => void;
+
+    /**
+     * Reference date, used to determine which month to display if "value" is not set.
+     */
     referenceDate?: Date;
+
+    /**
+     * Date value.
+     */
     value?: Optional<Date>;
 } & CommonCalendarProps;
 
@@ -33,8 +44,7 @@ const last = <T,>(arr: T[]): T => arr[arr.length - 1];
 export default function DateCalendar(props: DateCalendarProps) {
     const commonProps = extractCommonCalendarProps(props);
     const locale = createMemo(() => props.locale || navigator.language);
-
-    const selectedDate = createMemo(() => props.value);
+    const value = createMemo(() => (props.value ? new Date(props.value) : undefined));
     const today = getToday();
 
     const [selectMode, setSelectMode] = createSignal<Mode>("day");
@@ -43,7 +53,7 @@ export default function DateCalendar(props: DateCalendarProps) {
 
     // The reference date is used when display mode is "month" or "year".
     const [referenceDate, setReferenceDate] = createSignal(
-        props.value || props.referenceDate || today,
+        value() || props.referenceDate || today,
     );
 
     // The calendar date is used when displayed mode is "day".
@@ -51,7 +61,7 @@ export default function DateCalendar(props: DateCalendarProps) {
 
     // When the value changes, update the calendar date.
     createEffect(() => {
-        setCalendarDate(props.value || today);
+        setCalendarDate(value() || today);
     });
 
     // When the reference date changes, update months and years.
@@ -91,7 +101,7 @@ export default function DateCalendar(props: DateCalendarProps) {
 
     const nextDecade = () => setReferenceDate(addYears(referenceDate(), 20));
 
-    const { weeks } = useWeeks(calendarDate, selectedDate, locale);
+    const { weeks } = useWeeks(calendarDate, value, locale);
 
     const format = createMemo(() => new DateFormat(locale()));
 
