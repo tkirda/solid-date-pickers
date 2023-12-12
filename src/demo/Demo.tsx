@@ -1,51 +1,45 @@
 import { createMemo, createSignal } from "solid-js";
 import {
     Box,
-    Button,
     CssBaseline,
-    Divider,
-    FormControl,
     Grid,
     IconButton,
-    InputLabel,
-    MenuItem,
-    Select,
-    Stack,
     ThemeProvider,
-    Typography,
     createPalette,
     createTheme,
 } from "@suid/material";
 import LightModeIcon from "@suid/icons-material/LightMode";
 import DarkModeIcon from "@suid/icons-material/DarkMode";
-import DateField from "../DateField";
-import DateCalendar from "../DateCalendar";
-import DateRangeCalendar from "../DateRangeCalendar";
-import { DateRange, Optional } from "../models";
 import Code from "./Code";
-import DateFormat from "../format/DateFormat";
 import GitHubIcon from "./GitHubIcon";
 import "./Demo.css";
+import DateCalendarDemo from "./DateCalendarDemo";
+import DateFieldDemo from "./DateFieldDemo";
+import DateRangeCalendarDemo from "./DateRangeCalendarDemo";
+import { setDefaultLocale } from "../locale";
+import DateRangeWithInputsDemo from "./DateRangeWithInputsDemo";
+import SetDefaultLocale from "./SetDefaultLocale";
+
+// @ts-expect-error: source code
+import DateCalendarDemoSource from "./DateCalendarDemo?raw";
+// @ts-expect-error: source code
+import DateFieldDemoSource from "./DateFieldDemo?raw";
+// @ts-expect-error: source code
+import DateRangeCalendarDemoSource from "./DateRangeCalendarDemo?raw";
+// @ts-expect-error: source code
+import DateRangeWithInputsDemoSource from "./DateRangeWithInputsDemo?raw";
+// @ts-expect-error: source code
+import SetDefaultLocaleSource from "./SetDefaultLocale?raw";
+
+setDefaultLocale("en-US");
 
 export default function Demo() {
-    const [date, setDate] = createSignal<Optional<Date>>();
-    const [range1, setRange1] = createSignal<DateRange>([null, null]);
-    const [range2, setRange2] = createSignal<DateRange>([null, null]);
     const [mode, setMode] = createSignal<"dark" | "light">("dark");
-    const [locale, setLocale] = createSignal("en-US");
-    const shortDateFormat = createMemo(() => new DateFormat(locale()).getShortDateFormat());
     const darkMode = createMemo(() => mode() === "dark");
 
     const palette = createMemo(() =>
         createPalette(
-            darkMode()
-                ? {
-                      mode: mode(),
-                      background: { default: "#0D1117" },
-                  }
-                : {
-                      mode: mode(),
-                  },
+            darkMode() ? { mode: mode(), background: { default: "#0D1117" } } : { mode: mode() },
         ),
     );
 
@@ -81,22 +75,20 @@ export default function Demo() {
                     </Grid>
                 </Grid>
             </Box>
-            <Box maxWidth={800} margin="0 auto" padding={2}>
+            <Box padding={2} margin="50px auto" maxWidth="850px">
                 <h2>Overview</h2>
                 <p>
-                    This is a collection of date picker components for SolidJS. Similar to{" "}
+                    {"This is a collection of date picker components for SolidJS. Similar to "}
                     <a href="https://mui.com/x/react-date-pickers/" target="_blank">
                         MUI Date Pickers
                     </a>
-                    .
-                </p>
-                <p>
-                    The package is built on top of SUID UI library. It requires following peer
-                    dependencies:{" "}
+                    {
+                        ". The package is built on top of SUID UI library. It requires following peer dependencies: "
+                    }
                     <a href="https://suid.io/" target="_blank">
                         @suid/material
-                    </a>{" "}
-                    and{" "}
+                    </a>
+                    {" and "}
                     <a href="https://suid.io/components/material-icons" target="_blank">
                         @suid/icons-material
                     </a>
@@ -104,89 +96,23 @@ export default function Demo() {
                 </p>
 
                 <h2>Date Field</h2>
-                <p>The Date Field component lets users select a date with the keyboard.</p>
-                <DateField
-                    label="Date Field"
-                    value={date()}
-                    onChange={setDate}
-                    format={shortDateFormat()}
-                />
-
-                <p>With custom date format:</p>
-                <DateField
-                    label="Format: YYYY-MM-DD HH:mm"
-                    format="YYYY-MM-DD HH:mm"
-                    value={date()}
-                    onChange={setDate}
-                />
-                <br />
-                <br />
-
-                <Code source={dateFieldSample} />
+                <p>The DateField component lets users select a date with the keyboard.</p>
+                <DateFieldDemo />
+                <Code source={DateFieldDemoSource} />
 
                 <h2>Date Calendar</h2>
-                <DateCalendar
-                    disableHighlightToday
-                    locale={locale()}
-                    onChange={setDate}
-                    value={date()}
-                />
-
-                <Code source={dateCalendarSample} />
+                <p>The DateCalendar component lets users select a date from a calendar.</p>
+                <DateCalendarDemo />
+                <Code source={DateCalendarDemoSource} />
 
                 <h2>Date Range Calendar</h2>
-                <DateRangeCalendar
-                    calendars={2}
-                    disableHighlightToday
-                    locale={locale()}
-                    onChange={setRange1}
-                    value={range1()}
-                />
-                <br />
-                <Button
-                    variant="outlined"
-                    disabled={range1().every((v) => !v)}
-                    onClick={() => setRange1([null, null])}
-                >
-                    Clear
-                </Button>
-
-                <Code source={dateRangeCalendarSample} />
-
-                <h2>Date Range Calendar with Inputs (sample)</h2>
-                <Stack direction="row" spacing={2}>
-                    <DateField
-                        format={shortDateFormat()}
-                        label="Date Start"
-                        onChange={(d) => setRange2([d, range2()[1]])}
-                        value={range2()[0]}
-                    />
-                    <DateField
-                        format={shortDateFormat()}
-                        label="Date End"
-                        onChange={(d) => setRange2([range2()[0], d])}
-                        value={range2()[1]}
-                    />
-                </Stack>
-                <br />
-                <DateRangeCalendar
-                    calendars={2}
-                    disableHighlightToday
-                    locale={locale()}
-                    onChange={setRange2}
-                    value={range2()}
-                />
-                <br />
-                <Button
-                    variant="outlined"
-                    disabled={range2().every((v) => !v)}
-                    onClick={() => setRange2([null, null])}
-                >
-                    Clear
-                </Button>
+                <p>
+                    The DateRangeCalendar component lets users select a date range from a calendar.
+                </p>
+                <DateRangeCalendarDemo />
+                <Code source={DateRangeCalendarDemoSource} />
 
                 <h2>Localization</h2>
-
                 <p>
                     Specify your preferred locale to view labels in a localized format. Components
                     leverage the Intl.DateTimeFormat to format dates according to your selected
@@ -195,48 +121,14 @@ export default function Demo() {
                     sample of the locales; the full range of available options depends on your
                     browser's capabilities.
                 </p>
+                <SetDefaultLocale />
+                <Code source={SetDefaultLocaleSource} />
 
-                <FormControl variant="outlined" sx={{ minWidth: 200 }}>
-                    <InputLabel id="locale-label">Locale</InputLabel>
-                    <Select
-                        labelId="locale-label"
-                        label="Locale"
-                        value={locale()}
-                        onChange={(e) => setLocale(e.target.value)}
-                    >
-                        <MenuItem value="de-DE">German (de-DE)</MenuItem>
-                        <MenuItem value="en-GB">English (en-GB)</MenuItem>
-                        <MenuItem value="en-US">English (en-US)</MenuItem>
-                        <MenuItem value="es-ES">Spanish (es-ES)</MenuItem>
-                        <MenuItem value="fr-FR">French (fr-FR)</MenuItem>
-                        <MenuItem value="ja-JP">Japanese (ja-JP)</MenuItem>
-                        <MenuItem value="lt-LT">Lithuanian (lt-LT)</MenuItem>
-                        <MenuItem value="pt-BR">Portuguese (pt-BR)</MenuItem>
-                        <MenuItem value="ru-RU">Russian (ru-RU)</MenuItem>
-                        <MenuItem value="zh-CN">Chinese (zh-CN)</MenuItem>
-                    </Select>
-                </FormControl>
-                <br />
-                <br />
+                <h2>Samples</h2>
+                <h3>Date Range Calendar with Inputs </h3>
+                <DateRangeWithInputsDemo />
+                <Code source={DateRangeWithInputsDemoSource} />
             </Box>
         </ThemeProvider>
     );
 }
-
-const dateCalendarSample = `
-import { DateCalendar } from "solid-date-pickers";
-
-<DateCalendar value={date()} onChange={setDate} />
-`;
-
-const dateRangeCalendarSample = `
-import { DateRangeCalendar } from "solid-date-pickers";
-
-<DateRangeCalendar value={range()} calendars={2} onChange={setRange} />
-`;
-
-const dateFieldSample = `
-import { DateField } from "solid-date-pickers";
-
-<DateField label="Date Field" value={date()} onChange={setDate} />
-`;

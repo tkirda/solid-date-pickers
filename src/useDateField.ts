@@ -2,6 +2,8 @@ import { createEffect, createMemo, createSignal, onCleanup } from "solid-js";
 import { getToday, isDate } from "./dateUtils";
 import { padStart } from "./format/stringFormat";
 import { Optional } from "./models";
+import DateFormat from "./format/DateFormat";
+import { defaultLocale } from "./locale";
 
 type FragmentKey = "MM" | "DD" | "YYYY" | "HH" | "hh" | "mm" | "ss" | "SSS" | "AM";
 
@@ -30,9 +32,25 @@ const definitions: Record<FragmentKey, Definition> = {
 };
 
 type DateFieldProps = {
-    value?: Optional<Date>;
+    /**
+     * The format of the date field, e.g. "MM/DD/YYYY".
+     */
     format?: string;
+
+    /**
+     * The locale to use for formatting the date field.
+     */
+    locale?: string;
+
+    /**
+     * On change callback.
+     */
     onChange?: (date: Optional<Date>) => void;
+
+    /**
+     * The value of the date field.
+     */
+    value?: Optional<Date>;
 };
 
 /**
@@ -61,8 +79,6 @@ const parseFragments = (pattern: string) => {
     return fragments;
 };
 
-const defaultFormat = "MM/DD/YYYY";
-
 const normalizeAmPm = (hours: number) => (hours === 0 || hours === 12 ? 12 : hours % 12);
 
 const toInt = (value: string) => parseInt(value, 10);
@@ -75,7 +91,14 @@ const toInt = (value: string) => parseInt(value, 10);
 export default function useDateField(props: DateFieldProps) {
     const [error, setError] = createSignal(false);
     const [fragments, setFragments] = createSignal<Fragment[]>([]);
-    const format = createMemo(() => props.format || defaultFormat);
+
+    const format = createMemo(() => {
+        const f = props.format;
+        const l = props.locale;
+        const dl = defaultLocale();
+
+        return f || new DateFormat(l || dl).getShortDateFormat();
+    });
 
     let input: HTMLInputElement;
 
@@ -111,15 +134,7 @@ export default function useDateField(props: DateFieldProps) {
                 selectFragment(fragment);
             }
         } else {
-            if (!input.value) {
-                input.value = f;
-                return;
-            }
-
-            // State has changed from a date to null
-            if (prevValue) {
-                input.value = f;
-            }
+            input.value = f;
         }
 
         return value;

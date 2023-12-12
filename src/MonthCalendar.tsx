@@ -3,6 +3,7 @@ import { CommonCalendarProps, DateRange, DayData, Week } from "./models";
 import { Box, IconButton, Stack, Typography } from "@suid/material";
 import { isSameDay, isToday, getToday } from "./dateUtils";
 import DateFormat from "./format/DateFormat";
+import { defaultLocale } from "./locale";
 
 type MonthCalendarProps = {
     onMouseOut?: () => void;
@@ -40,7 +41,7 @@ export const extractCommonCalendarProps = <T extends CommonCalendarProps>(props:
 
 export default function MonthCalendar(props: MonthCalendarProps) {
     const weekDayLabels = createMemo(() =>
-        new DateFormat(props.locale || navigator.language).getWeekDayLabels(),
+        new DateFormat(props.locale || defaultLocale()).getWeekDayLabels(),
     );
 
     const sx = {
@@ -145,6 +146,12 @@ export default function MonthCalendar(props: MonthCalendarProps) {
                                     flex={1}
                                     backgroundColor={getBackgroundColor(day)}
                                     borderRadius={getBorderRadius(day)}
+                                    onMouseOut={props.onMouseOut}
+                                    onMouseOver={
+                                        props.onMouseOver && day
+                                            ? [props.onMouseOver, day.date]
+                                            : undefined
+                                    }
                                 >
                                     {day ? (
                                         <IconButton
@@ -160,10 +167,6 @@ export default function MonthCalendar(props: MonthCalendarProps) {
                                                 props.readOnly
                                                     ? undefined
                                                     : () => props.onSelect(day.date)
-                                            }
-                                            onMouseOut={props.onMouseOut}
-                                            onMouseOver={
-                                                props.onMouseOver && [props.onMouseOver, day.date]
                                             }
                                         >
                                             {day.day}

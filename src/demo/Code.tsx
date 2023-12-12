@@ -1,5 +1,6 @@
-import { createMemo } from "solid-js";
-import { Box, Paper, useTheme } from "@suid/material";
+import { Show, createMemo, createSignal } from "solid-js";
+import { Box, Button, Paper } from "@suid/material";
+import CodeIcon from "@suid/icons-material/Code";
 import Prism from "prismjs";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-markup";
@@ -11,18 +12,33 @@ type CodeProps = {
 };
 
 export default function Code(props: CodeProps) {
-    const theme = useTheme();
+    const code = createMemo(() =>
+        Prism.highlight(props.source.trim(), Prism.languages["tsx"], "tsx"),
+    );
 
-    const themeClassName = () =>
-        theme.palette.mode === "dark" ? "prism-vsc-dark-plus" : "prism-material-light";
-
-    const code = createMemo(() => Prism.highlight(props.source.trim(), Prism.languages["tsx"], "tsx"));
+    const [showCode, setShowCode] = createSignal(false);
+    const toggleSource = () => setShowCode((current) => !current);
 
     return (
-        <Paper variant="outlined" sx={{ margin: "20px 0" }}>
-            <Box component="pre" padding={2} margin={0}>
-                <Box margin={0} component="code" innerHTML={code()} />
+        <Box padding="10px 0">
+            <Box marginBottom={1}>
+                <Button onClick={toggleSource} size="small" startIcon={<CodeIcon />}>
+                    Code
+                </Button>
             </Box>
-        </Paper>
+            <Show when={showCode()}>
+                <Paper square variant="outlined">
+                    <Box
+                        backgroundColor="#121212"
+                        color="#FFF"
+                        component="pre"
+                        margin={0}
+                        padding={1}
+                    >
+                        <Box component="code" innerHTML={code()} />
+                    </Box>
+                </Paper>
+            </Show>
+        </Box>
     );
 }

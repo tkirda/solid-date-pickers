@@ -6,6 +6,7 @@ import MonthCalendar, { calendarWidth, extractCommonCalendarProps } from "./Mont
 import useWeeks from "./useWeeks";
 import { CommonCalendarProps, DateRange } from "./models";
 import DateFormat from "./format/DateFormat";
+import { defaultLocale } from "./locale";
 
 type DateRangeMonthCalendarProps = {
     onNext?: () => void;
@@ -22,11 +23,11 @@ export default function DateRangeMonthCalendar(props: DateRangeMonthCalendarProp
     const commonProps = extractCommonCalendarProps(props);
     const range = createMemo(() => props.range);
     const referenceDate = createMemo(() => props.referenceDate);
-    const locale = createMemo(() => props.locale || navigator.language);
+    const locale = createMemo(() => props.locale || defaultLocale());
 
     const { weeks } = useWeeks(referenceDate, range, locale);
 
-    const dateFormat = createMemo(() => new DateFormat(props.locale || navigator.language));
+    const dateFormat = createMemo(() => new DateFormat(props.locale || defaultLocale()));
 
     return (
         <Box width={calendarWidth}>

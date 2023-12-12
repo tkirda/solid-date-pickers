@@ -7,4 +7,6 @@ export type { DateRangeCalendarProps } from "./DateRangeCalendar";
 export { default as DateField } from "./DateField";
 export type { DateFieldProps } from "./DateField";
 
-export type { DateRange } from "./models";
+export type { DateRange, Optional } from "./models";
+
+export { defaultLocale, setDefaultLocale } from "./locale";

@@ -11,6 +11,7 @@ import { addMonths, addYears, isSameMonth, getToday, setYear, setMonth } from ".
 import ButtonLeft from "./components/ButtonLeft";
 import ButtonRight from "./components/ButtonRight";
 import DateFormat from "./format/DateFormat";
+import { defaultLocale } from "./locale";
 
 export type DateCalendarProps = {
     /**
@@ -43,7 +44,7 @@ const last = <T,>(arr: T[]): T => arr[arr.length - 1];
 
 export default function DateCalendar(props: DateCalendarProps) {
     const commonProps = extractCommonCalendarProps(props);
-    const locale = createMemo(() => props.locale || navigator.language);
+    const locale = createMemo(() => props.locale || defaultLocale());
     const value = createMemo(() => (props.value ? new Date(props.value) : undefined));
     const today = getToday();
 

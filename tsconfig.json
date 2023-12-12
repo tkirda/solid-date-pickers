@@ -13,6 +13,9 @@
     "skipLibCheck": true,
     "strict": true,
     "jsx": "preserve",
-    "jsxImportSource": "solid-js"
+    "jsxImportSource": "solid-js",
+    "paths": {
+      "solid-date-pickers": ["./src/index.ts"]
+    }
   }
 }
