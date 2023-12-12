@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { DateRangeCalendar, DateRange } from "solid-date-pickers";
+import { DateRangeCalendar, DateRange } from "../index";
 import { Button } from "@suid/material";
 
 export default function DateRangeCalendarDemo() {

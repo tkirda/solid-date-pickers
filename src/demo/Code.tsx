@@ -13,7 +13,11 @@ type CodeProps = {
 
 export default function Code(props: CodeProps) {
     const code = createMemo(() =>
-        Prism.highlight(props.source.trim(), Prism.languages["tsx"], "tsx"),
+        Prism.highlight(
+            props.source.trim().replace("../index", "solid-date-pickers"),
+            Prism.languages["tsx"],
+            "tsx",
+        ),
     );
 
     const [showCode, setShowCode] = createSignal(false);

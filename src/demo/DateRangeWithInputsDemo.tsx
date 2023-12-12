@@ -1,6 +1,6 @@
 import { createSignal, createMemo } from "solid-js";
 import { Button, Box, Stack } from "@suid/material";
-import { DateField, DateRangeCalendar, DateRange, Optional } from "solid-date-pickers";
+import { DateField, DateRangeCalendar, DateRange, Optional } from "../index";
 
 export default function DateRangeWithInputsDemo() {
     const [range, setRange] = createSignal<DateRange>([null, null]);

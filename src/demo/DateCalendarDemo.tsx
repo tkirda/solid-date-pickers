@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { DateCalendar } from "solid-date-pickers";
+import { DateCalendar } from "../index";
 
 export default function DateCalendarDemo() {
     const [date, setDate] = createSignal<Date>();

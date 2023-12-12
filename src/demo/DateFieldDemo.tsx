@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { DateField } from "solid-date-pickers";
+import { DateField } from "../index";
 
 export default function DateFieldDemo() {
     const [date, setDate] = createSignal<Date>();

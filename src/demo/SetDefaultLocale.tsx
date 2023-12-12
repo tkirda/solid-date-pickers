@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@suid/material";
-import { defaultLocale, setDefaultLocale } from "solid-date-pickers";
+import { defaultLocale, setDefaultLocale } from "../index";
 
 // You can set the default locale once for the entire application.
 setDefaultLocale("en-US");
