@@ -179,6 +179,7 @@ export default function MonthCalendar(props: MonthCalendarProps) {
                                 >
                                     {day ? (
                                         <Button
+                                            variant="text"
                                             disabled={isDisabled(day)}
                                             disableRipple
                                             sx={{

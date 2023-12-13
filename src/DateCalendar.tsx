@@ -163,6 +163,7 @@ export default function DateCalendar(props: DateCalendarProps) {
                         {(month) => (
                             <Grid item xs={3}>
                                 <Button
+                                    variant="text"
                                     aria-checked={month.selected ? "true" : undefined}
                                     sx={{
                                         ...sx,
@@ -195,6 +196,7 @@ export default function DateCalendar(props: DateCalendarProps) {
                         {(year) => (
                             <Grid item xs={3}>
                                 <Button
+                                    variant="text"
                                     aria-checked={currentYear() === year ? "true" : undefined}
                                     sx={{
                                         ...sx,

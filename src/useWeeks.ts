@@ -18,7 +18,6 @@ export default function useWeeks(
     const [weeks, setWeeks] = createSignal<Week[]>([]);
 
     createEffect(() => {
-        console.log("useWeeks effect");
         const currentDate = calendarDate();
         const dateOrRange = selectedDate();
         const daysInMonth = getDaysInMonth(currentDate);
