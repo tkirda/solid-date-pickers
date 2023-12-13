@@ -16,15 +16,10 @@ export default function DateRangeWithInputsDemo() {
                 <DateField label="Date End" onChange={setEndDate} value={endDate()} />
             </Stack>
 
-            <DateRangeCalendar
-                calendars={2}
-                disableHighlightToday
-                onChange={setRange}
-                value={range()}
-            />
+            <DateRangeCalendar calendars={2} onChange={setRange} value={range()} />
 
             <br />
-            
+
             <Button
                 variant="outlined"
                 disabled={range().every((v) => !v)}

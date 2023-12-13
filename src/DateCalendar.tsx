@@ -1,5 +1,6 @@
 import { For, Show, createEffect, createMemo, createSignal } from "solid-js";
-import { Button, Grid, IconButton, Paper } from "@suid/material";
+import { Button, Grid, Paper } from "@suid/material";
+import SxProps from "@suid/system/sxProps";
 import useWeeks from "./useWeeks";
 import { CommonCalendarProps, MonthData, Optional } from "./models";
 import MonthCalendar, {
@@ -42,6 +43,16 @@ const first = <T,>(arr: T[]): T => arr[0];
  */
 const last = <T,>(arr: T[]): T => arr[arr.length - 1];
 
+// Props for styling mont and year buttons
+const sx: SxProps = {
+    borderColor: "primary.main",
+    borderStyle: "solid",
+    color: "text.primary",
+    fontSize: 14,
+    height: 40,
+    width: 40,
+};
+
 export default function DateCalendar(props: DateCalendarProps) {
     const commonProps = extractCommonCalendarProps(props);
     const locale = createMemo(() => props.locale || defaultLocale());
@@ -58,6 +69,8 @@ export default function DateCalendar(props: DateCalendarProps) {
     // The calendar date is used when displayed mode is "day".
     const [calendarDate, setCalendarDate] = createSignal(today);
 
+    const currentYear = createMemo(() => calendarDate().getFullYear());
+
     createEffect(() => {
         const valueDate = props.value;
         const referenceDate = props.referenceDate || today;
@@ -69,21 +82,24 @@ export default function DateCalendar(props: DateCalendarProps) {
 
     // When the reference date changes, update months and years.
     createEffect(() => {
+        const rDate = referenceDate();
+        const cDate = calendarDate();
+
         const months: MonthData[] = [];
 
         for (let i = 0; i < 12; i++) {
-            const date = setMonth(referenceDate(), i);
+            const date = setMonth(rDate, i);
 
             months.push({
                 date: date,
-                selected: isSameMonth(date, calendarDate()),
+                selected: isSameMonth(date, cDate),
             });
         }
 
         setMonths(months);
 
         const years: number[] = [];
-        const currentYear = referenceDate().getFullYear();
+        const currentYear = rDate.getFullYear();
 
         for (let i = currentYear - 10; i < currentYear + 10; i++) {
             years.push(i);
@@ -146,14 +162,12 @@ export default function DateCalendar(props: DateCalendarProps) {
                     <For each={months()}>
                         {(month) => (
                             <Grid item xs={3}>
-                                <IconButton
+                                <Button
+                                    aria-checked={month.selected ? "true" : undefined}
                                     sx={{
-                                        height: 60,
-                                        width: 60,
-                                        fontSize: 12,
-                                        borderColor: "primary.main",
-                                        borderStyle: "solid",
+                                        ...sx,
                                         borderWidth: month.selected ? 2 : undefined,
+                                        textTransform: "none",
                                     }}
                                     onClick={() => {
                                         setCalendarDate(month.date);
@@ -161,7 +175,7 @@ export default function DateCalendar(props: DateCalendarProps) {
                                     }}
                                 >
                                     {format().monthNameShort(month.date)}
-                                </IconButton>
+                                </Button>
                             </Grid>
                         )}
                     </For>
@@ -180,15 +194,11 @@ export default function DateCalendar(props: DateCalendarProps) {
                     <For each={years()}>
                         {(year) => (
                             <Grid item xs={3}>
-                                <IconButton
+                                <Button
+                                    aria-checked={currentYear() === year ? "true" : undefined}
                                     sx={{
-                                        height: 40,
-                                        width: 40,
-                                        fontSize: 12,
-                                        borderColor: "primary.main",
-                                        borderStyle: "solid",
-                                        borderWidth:
-                                            calendarDate().getFullYear() === year ? 2 : undefined,
+                                        ...sx,
+                                        borderWidth: currentYear() === year ? 2 : undefined,
                                     }}
                                     onClick={() => {
                                         setReferenceDate(setYear(calendarDate(), year));
@@ -196,7 +206,7 @@ export default function DateCalendar(props: DateCalendarProps) {
                                     }}
                                 >
                                     {year}
-                                </IconButton>
+                                </Button>
                             </Grid>
                         )}
                     </For>

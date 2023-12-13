@@ -6,6 +6,21 @@ type WeekInfo = {
     weekend: [number, number];
 };
 
+type Weekday = {
+    /**
+     * Short weekday name
+     */
+    short: string;
+    /**
+     * Long weekday name
+     */
+    long: string;
+    /**
+     * Sunday - Saturday: 0 - 6
+     */
+    day: number;
+};
+
 export default class DateFormat {
     constructor(private locale: string) {}
 
@@ -40,14 +55,21 @@ export default class DateFormat {
         return weekInfo.firstDay;
     }
 
-    public getWeekDayLabels() {
-        const days: string[] = [];
+    /**
+     * Returns an array of weekdays, starting with the first day of the week.
+     */
+    public getWeekdays() {
+        const days: Weekday[] = [];
         const sunday = new Date(2023, 4, 0);
 
         for (let i = 0; i < 7; i++) {
             const date = new Date(sunday);
             date.setDate(date.getDate() + i + this.getFirstDayOfWeek());
-            days.push(this.weekdayNameShort(date));
+            days.push({
+                long: this.weekdayNameLong(date),
+                short: this.weekdayNameShort(date),
+                day: date.getDay(),
+            });
         }
 
         return days;
@@ -55,6 +77,10 @@ export default class DateFormat {
 
     public weekdayNameShort(date: Date) {
         return this.getFormat({ weekday: "short" }).format(date);
+    }
+
+    public weekdayNameLong(date: Date) {
+        return this.getFormat({ weekday: "long" }).format(date);
     }
 
     public getShortDateFormat() {

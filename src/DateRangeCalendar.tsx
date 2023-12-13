@@ -8,9 +8,21 @@ import DateRangeMonthCalendar from "./DateRangeMonthCalendar";
 type CalendarCount = 1 | 2 | 3;
 
 export type DateRangeCalendarProps = {
+    /**
+     * Number of calendars to display. 1, 2 or 3.
+     */
     calendars?: CalendarCount;
+    /**
+     * On change callback.
+     */
     onChange: (value: DateRange) => void;
+    /**
+     * Reference date, used to determine which month to display if "value" is not set.
+     */
     referenceDate?: Date;
+    /**
+     * Date range value.
+     */
     value: DateRange;
 } & CommonCalendarProps;
 

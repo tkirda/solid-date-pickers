@@ -8,7 +8,7 @@ export default function DateCalendarDemo() {
     return (
         <Stack spacing={2} marginBottom={2} width={272}>
             <DateField label="Date Field" value={date()} onChange={setDate} />
-            <DateCalendar disableHighlightToday onChange={setDate} value={date()} />
+            <DateCalendar onChange={setDate} value={date()} />
             <Button disabled={!date()} onClick={() => setDate(undefined)} variant="outlined">
                 Clear
             </Button>

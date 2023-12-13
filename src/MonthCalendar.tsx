@@ -1,6 +1,7 @@
 import { For, createMemo, splitProps } from "solid-js";
+import { Box, Button, Stack, Typography } from "@suid/material";
+import SxProps from "@suid/system/sxProps";
 import { CommonCalendarProps, DateRange, DayData, Week } from "./models";
-import { Box, IconButton, Stack, Typography } from "@suid/material";
 import { isSameDay, isToday, getToday } from "./dateUtils";
 import DateFormat from "./format/DateFormat";
 import { defaultLocale } from "./locale";
@@ -14,12 +15,7 @@ type MonthCalendarProps = {
     weeks: Week[];
 } & CommonCalendarProps;
 
-const getBorderWidth = (day: DayData, disableHighlightToday?: boolean) => {
-    if (day.selected) return 2;
-    if (disableHighlightToday) return undefined;
-
-    return isToday(day.date) ? 1 : undefined;
-};
+const getBorderWidth = (day: DayData) => (day.selected ? 2 : undefined);
 
 export const calendarWidth = 240;
 
@@ -40,16 +36,20 @@ export const extractCommonCalendarProps = <T extends CommonCalendarProps>(props:
 };
 
 export default function MonthCalendar(props: MonthCalendarProps) {
-    const weekDayLabels = createMemo(() =>
-        new DateFormat(props.locale || defaultLocale()).getWeekDayLabels(),
+    const weekdays = createMemo(() =>
+        new DateFormat(props.locale || defaultLocale()).getWeekdays(),
     );
 
-    const sx = {
-        width: 30,
-        height: 30,
-        fontSize: 14,
+    // Props for styling day buttons
+    const sx: SxProps = {
         borderColor: "primary.main",
         borderStyle: "solid",
+        color: "text.primary",
+        fontSize: 14,
+        height: 30,
+        minWidth: "none",
+        padding: 0,
+        width: "100%",
     };
 
     const isInBetween = (day: DayData) => {
@@ -93,11 +93,24 @@ export default function MonthCalendar(props: MonthCalendarProps) {
         return false;
     };
 
-    const getBackgroundColor = (day: DayData | null) => {
+    const getBackgroundColor = (day: DayData | null, disableHighlightToday?: boolean) => {
+        if (!disableHighlightToday && day && isToday(day.date)) {
+            return "rgba(144, 202, 249, 0.12)";
+        }
+
         return day && isInBetween(day) ? "rgba(144, 202, 249, 0.12)" : undefined;
     };
 
-    const getBorderRadius = (day: DayData | null) => {
+    const getBorderRadius = (day: DayData | null, disableHighlightToday?: boolean) => {
+        const radius = "4px";
+
+        if (!disableHighlightToday && day && isToday(day.date)) {
+            // Do not round corners if today is in the range when using range selection
+            if (!isInBetween(day)) {
+                return radius;
+            }
+        }
+
         if (!day || !props.range) {
             return undefined;
         }
@@ -113,39 +126,50 @@ export default function MonthCalendar(props: MonthCalendarProps) {
         }
 
         if (start && end && isSameDay(start, end)) {
-            return "50%";
+            return radius;
         }
 
         // Round the first and last day of the range
         if (start && isSameDay(start, day.date)) {
-            return "50% 0 0 50%";
+            return `${radius} 0 0 ${radius}`;
         } else if (end && isSameDay(end, day.date)) {
-            return "0 50% 50% 0";
+            return `0 ${radius} ${radius} 0`;
         }
 
         return undefined;
     };
 
     return (
-        <Box minHeight={calendarHeight}>
-            <Stack direction="row" marginBottom={1} marginTop={1}>
-                <For each={weekDayLabels()}>
-                    {(label) => (
-                        <Typography fontWeight="bold" fontSize="small" flex={1}>
-                            {label}
+        <Box minHeight={calendarHeight} role="grid">
+            <Stack direction="row" marginBottom={1} marginTop={1} role="row">
+                <For each={weekdays()}>
+                    {(weekday) => (
+                        <Typography
+                            arial-label={weekday.long}
+                            as="span"
+                            flex={1}
+                            fontSize="small"
+                            fontWeight="bold"
+                            role="columnheader"
+                        >
+                            {weekday.short}
                         </Typography>
                     )}
                 </For>
             </Stack>
             <For each={props.weeks}>
                 {(week) => (
-                    <Stack direction="row" spacing={0} style={{ display: "flex", width: "100%" }}>
+                    <Stack direction="row" displayRaw="flex" role="row" spacing={0} width="100%">
                         <For each={week}>
                             {(day) => (
                                 <Box
                                     flex={1}
-                                    backgroundColor={getBackgroundColor(day)}
+                                    backgroundColor={getBackgroundColor(
+                                        day,
+                                        props.disableHighlightToday,
+                                    )}
                                     borderRadius={getBorderRadius(day)}
+                                    role="gridcell"
                                     onMouseOut={props.onMouseOut}
                                     onMouseOver={
                                         props.onMouseOver && day
@@ -154,14 +178,12 @@ export default function MonthCalendar(props: MonthCalendarProps) {
                                     }
                                 >
                                     {day ? (
-                                        <IconButton
+                                        <Button
                                             disabled={isDisabled(day)}
+                                            disableRipple
                                             sx={{
                                                 ...sx,
-                                                borderWidth: getBorderWidth(
-                                                    day,
-                                                    props.disableHighlightToday,
-                                                ),
+                                                borderWidth: getBorderWidth(day),
                                             }}
                                             onClick={
                                                 props.readOnly
@@ -170,7 +192,7 @@ export default function MonthCalendar(props: MonthCalendarProps) {
                                             }
                                         >
                                             {day.day}
-                                        </IconButton>
+                                        </Button>
                                     ) : null}
                                 </Box>
                             )}
