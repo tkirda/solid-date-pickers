@@ -1,6 +1,6 @@
 {
   "name": "solid-date-pickers",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "SolidJS date picker components built with @suid/material",
   "keywords": [
     "solid",
@@ -27,7 +27,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "rollup -c",
+    "build": "rimraf ./dist && set NODE_OPTIONS=\"--no-warnings\" && rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "build:docs": "tsc && vite build --outDir ./docs",
     "type-check": "tsc",
     "test": "jest --verbose --runInBand",
@@ -46,6 +46,10 @@
     "solid-js": ">=1.6.0"
   },
   "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.5",
     "@storybook/addon-essentials": "^7.6.4",
     "@storybook/addon-interactions": "^7.6.4",
     "@storybook/addon-links": "^7.6.4",
@@ -65,8 +69,8 @@
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rimraf": "^5.0.5",
     "rollup": "^4.8.0",
-    "rollup-preset-solid": "^2.0.1",
     "solid-js": "^1.8.7",
     "storybook": "^7.6.4",
     "storybook-solidjs": "^1.0.0-beta.2",
