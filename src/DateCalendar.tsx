@@ -13,6 +13,7 @@ import ButtonLeft from "./components/ButtonLeft";
 import ButtonRight from "./components/ButtonRight";
 import DateFormat from "./format/DateFormat";
 import { defaultLocale } from "./locale";
+import Transition, { TransitionDirection } from "./components/Transition";
 
 export type DateCalendarProps = {
     /**
@@ -78,6 +79,7 @@ export default function DateCalendar(props: DateCalendarProps) {
 
         setReferenceDate(date);
         setCalendarDate(date);
+        setTransitionDate(date);
     });
 
     // When the reference date changes, update months and years.
@@ -108,9 +110,29 @@ export default function DateCalendar(props: DateCalendarProps) {
         setYears(years);
     });
 
-    const previousMonth = () => setCalendarDate(addMonths(calendarDate(), -1));
+    // Transition handling section start
+    const [transitionDate, setTransitionDate] = createSignal(today);
 
-    const nextMonth = () => setCalendarDate(addMonths(calendarDate(), 1));
+    const [transitionDirection, setTransitionDirection] = createSignal<TransitionDirection>("none");
+
+    const { weeks: transitionWeeks } = useWeeks(transitionDate, value, locale);
+
+    const handleTransitionEnd = () => {
+        setCalendarDate(transitionDate());
+        setTransitionDirection("none");
+    };
+
+    // End transtion handling section
+
+    const previousMonth = () => {
+        setTransitionDate(addMonths(calendarDate(), -1));
+        setTransitionDirection("prev");
+    };
+
+    const nextMonth = () => {
+        setTransitionDate(addMonths(calendarDate(), 1));
+        setTransitionDirection("next");
+    };
 
     const previousYear = () => setReferenceDate(addYears(referenceDate(), -1));
 
@@ -143,7 +165,20 @@ export default function DateCalendar(props: DateCalendarProps) {
                     </Grid>
                 </Grid>
 
-                <MonthCalendar {...commonProps} onSelect={props.onChange} weeks={weeks()} />
+                <Transition
+                    onTransitionEnd={handleTransitionEnd}
+                    width={calendarWidth}
+                    transitionDirection={transitionDirection()}
+                    transitionTo={
+                        <MonthCalendar
+                            {...commonProps}
+                            onSelect={props.onChange}
+                            weeks={transitionWeeks()}
+                        />
+                    }
+                >
+                    <MonthCalendar {...commonProps} onSelect={props.onChange} weeks={weeks()} />
+                </Transition>
             </Show>
 
             <Show when={selectMode() === "month"}>
