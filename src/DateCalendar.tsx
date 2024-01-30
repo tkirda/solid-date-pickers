@@ -1,19 +1,17 @@
-import { Accessor, For, Show, createEffect, createMemo, createSignal } from "solid-js";
+import { Show, createEffect, createMemo, createSignal } from "solid-js";
 import { Button, Grid, Paper } from "@suid/material";
-import SxProps from "@suid/system/sxProps";
 import useWeeks from "./useWeeks";
-import { CommonCalendarProps, MonthData, Optional } from "./models";
-import MonthCalendar, {
-    calendarHeight,
-    calendarWidth,
-    extractCommonCalendarProps,
-} from "./MonthCalendar";
-import { addMonths, addYears, isSameMonth, getToday, setYear, setMonth } from "./dateUtils";
+import { CommonCalendarProps, Optional } from "./models";
+import MonthCalendar, { calendarWidth, extractCommonCalendarProps } from "./MonthCalendar";
+import { addMonths, addYears, getToday, setYear } from "./dateUtils";
 import ButtonLeft from "./components/ButtonLeft";
 import ButtonRight from "./components/ButtonRight";
 import DateFormat from "./format/DateFormat";
 import { defaultLocale } from "./locale";
 import Transition, { TransitionDirection } from "./components/Transition";
+import useMonths from "./useMonts";
+import { MonthList, YearList } from "./components/MonthYearList";
+import { first, last } from "./arrayUtils";
 
 export type DateCalendarProps = {
     /**
@@ -33,26 +31,6 @@ export type DateCalendarProps = {
 } & CommonCalendarProps;
 
 type Mode = "day" | "month" | "year";
-
-/**
- * Returns the first element of an array.
- */
-const first = <T,>(arr: T[]): T => arr[0];
-
-/**
- * Returns the last element of an array.
- */
-const last = <T,>(arr: T[]): T => arr[arr.length - 1];
-
-// Props for styling mont and year buttons
-const sx: SxProps = {
-    borderColor: "primary.main",
-    borderStyle: "solid",
-    color: "text.primary",
-    fontSize: 14,
-    height: 40,
-    width: 40,
-};
 
 export default function DateCalendar(props: DateCalendarProps) {
     const commonProps = extractCommonCalendarProps(props);
@@ -86,7 +64,10 @@ export default function DateCalendar(props: DateCalendarProps) {
 
     const [transitionDate, setTransitionDate] = createSignal(today);
 
-    const { months: transitionMonths } = useMonths(transitionReferenceDate, calendarDate);
+    const { months: transitionMonths, years: transitionYears } = useMonths(
+        transitionReferenceDate,
+        calendarDate,
+    );
 
     const [transitionDirection, setTransitionDirection] = createSignal<TransitionDirection>("none");
 
@@ -127,9 +108,25 @@ export default function DateCalendar(props: DateCalendarProps) {
         setSelectMode("day");
     };
 
-    const previousDecade = () => setReferenceDate(addYears(referenceDate(), -20));
+    const previousDecade = () => {
+        setTransitionReferenceDate(addYears(referenceDate(), -20));
+        setTransitionDirection("prev");
+    };
 
-    const nextDecade = () => setReferenceDate(addYears(referenceDate(), 20));
+    const nextDecade = () => {
+        setTransitionReferenceDate(addYears(referenceDate(), 20));
+        setTransitionDirection("next");
+    };
+
+    const handleYearTransitionEnd = () => {
+        setReferenceDate(transitionReferenceDate());
+        setTransitionDirection("none");
+    };
+
+    const handleYearClick = (year: number) => {
+        setReferenceDate(setYear(calendarDate(), year));
+        setSelectMode("month");
+    };
 
     const { weeks } = useWeeks(calendarDate, value, locale);
 
@@ -210,95 +207,25 @@ export default function DateCalendar(props: DateCalendarProps) {
                         <ButtonRight onClick={nextDecade} />
                     </Grid>
                 </Grid>
-                <Grid container minHeight={calendarHeight}>
-                    <For each={years()}>
-                        {(year) => (
-                            <Grid item xs={3}>
-                                <Button
-                                    variant="text"
-                                    aria-checked={currentYear() === year ? "true" : undefined}
-                                    sx={{
-                                        ...sx,
-                                        borderWidth: currentYear() === year ? 2 : undefined,
-                                    }}
-                                    onClick={() => {
-                                        setReferenceDate(setYear(calendarDate(), year));
-                                        setSelectMode("month");
-                                    }}
-                                >
-                                    {year}
-                                </Button>
-                            </Grid>
-                        )}
-                    </For>
-                </Grid>
+                <Transition
+                    onTransitionEnd={handleYearTransitionEnd}
+                    width={calendarWidth}
+                    transitionDirection={transitionDirection()}
+                    transitionTo={
+                        <YearList
+                            years={transitionYears()}
+                            currentYear={currentYear()}
+                            onYearClick={handleYearClick}
+                        />
+                    }
+                >
+                    <YearList
+                        years={years()}
+                        currentYear={currentYear()}
+                        onYearClick={handleYearClick}
+                    />
+                </Transition>
             </Show>
         </Paper>
     );
-}
-
-function MonthList(props: {
-    months: MonthData[];
-    onMonthClick: (date: Date) => void;
-    format: DateFormat;
-}) {
-    return (
-        <Grid container minHeight={calendarHeight}>
-            <For each={props.months}>
-                {(month) => (
-                    <Grid item xs={3}>
-                        <Button
-                            variant="text"
-                            aria-checked={month.selected ? "true" : undefined}
-                            sx={{
-                                ...sx,
-                                borderWidth: month.selected ? 2 : undefined,
-                                textTransform: "none",
-                            }}
-                            onClick={() => {
-                                props.onMonthClick(month.date);
-                            }}
-                        >
-                            {props.format.monthNameShort(month.date)}
-                        </Button>
-                    </Grid>
-                )}
-            </For>
-        </Grid>
-    );
-}
-
-function useMonths(referenceDate: Accessor<Date>, calendarDate: Accessor<Date>) {
-    const [months, setMonths] = createSignal<MonthData[]>([]);
-    const [years, setYears] = createSignal<number[]>([]);
-
-    createEffect(() => {
-        const rDate = referenceDate();
-        const cDate = calendarDate();
-
-        const monthsArr: MonthData[] = [];
-
-        for (let i = 0; i < 12; i++) {
-            const date = setMonth(rDate, i);
-            const selected = isSameMonth(date, cDate);
-
-            monthsArr.push({
-                date: date,
-                selected: selected,
-            });
-        }
-
-        setMonths(monthsArr);
-
-        const yearsArr: number[] = [];
-        const currentYear = rDate.getFullYear();
-
-        for (let i = currentYear - 10; i < currentYear + 10; i++) {
-            yearsArr.push(i);
-        }
-
-        setYears(yearsArr);
-    });
-
-    return { months, years };
 }
