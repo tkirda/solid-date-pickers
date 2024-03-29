@@ -14,8 +14,8 @@ This component has the following peer dependencies that you will need to install
 
 ```json
   "peerDependencies": {
-    "@suid/icons-material": "^0.6.11",
-    "@suid/material": "^0.15.1",
+    "@suid/icons-material": "^0.7.0",
+    "@suid/material": "^0.16.0",
     "solid-js": ">=1.6.0"
   },
 ```

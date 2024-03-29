@@ -41,8 +41,8 @@
     "url": "git+https://github.com/tkirda/solid-date-pickers.git"
   },
   "peerDependencies": {
-    "@suid/icons-material": "^0.6.11",
-    "@suid/material": "^0.15.1",
+    "@suid/icons-material": "^0.7.0",
+    "@suid/material": "^0.16.0",
     "solid-js": ">=1.6.0"
   },
   "devDependencies": {
@@ -50,31 +50,31 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@storybook/addon-essentials": "^8.0.0",
-    "@storybook/addon-interactions": "^8.0.0",
-    "@storybook/addon-links": "^8.0.0",
-    "@storybook/blocks": "^8.0.0",
-    "@suid/icons-material": "^0.6.11",
-    "@suid/material": "^0.15.1",
+    "@storybook/addon-essentials": "^8.0.5",
+    "@storybook/addon-interactions": "^8.0.5",
+    "@storybook/addon-links": "^8.0.5",
+    "@storybook/blocks": "^8.0.5",
+    "@suid/icons-material": "^0.7.0",
+    "@suid/material": "^0.16.0",
     "@types/jest": "^29.5.12",
     "@types/prismjs": "^1.26.3",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
     "eslint": "^8.57.0",
     "eslint-plugin-jest": "^27.9.0",
-    "eslint-plugin-solid": "^0.13.1",
+    "eslint-plugin-solid": "^0.13.2",
     "jest": "^29.7.0",
     "prettier": "^3.2.5",
     "prismjs": "^1.29.0",
     "rimraf": "^5.0.5",
-    "rollup": "^4.13.0",
-    "solid-js": "^1.8.15",
-    "storybook": "^8.0.0",
+    "rollup": "^4.13.2",
+    "solid-js": "^1.8.16",
+    "storybook": "^8.0.5",
     "storybook-solidjs": "^1.0.0-beta.2",
     "storybook-solidjs-vite": "^1.0.0-beta.2",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.4.2",
-    "vite": "^5.1.6",
+    "typescript": "^5.4.3",
+    "vite": "^5.2.7",
     "vite-plugin-solid": "^2.10.2"
   },
   "prettier": {
@@ -91,6 +91,6 @@
     ]
   },
   "dependencies": {
-    "@storybook/test": "^8.0.0"
+    "@storybook/test": "^8.0.5"
   }
 }
